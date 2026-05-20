@@ -57,7 +57,7 @@ npx prisma migrate dev --name init
 npm install class-validator class-transformer
 
 ### installer l'adaptateur mariadb
-npm install -g @prisma/adapter-mariadb
+npm install --save-dev @prisma/adapter-mariadb
 
 ### paquets pour gerer la config typescript de prisma
 npm install @prisma/config dotenv --save-dev
