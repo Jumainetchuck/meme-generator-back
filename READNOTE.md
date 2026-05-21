@@ -20,6 +20,8 @@ npm install @nestjs/config
 
 ### lancer un microservice
 npm run start api-gateway
+npm run start auth_service
+...
 
 ### migration meme service
 npx prisma migrate dev \
@@ -29,6 +31,29 @@ npx prisma migrate dev \
 ### generer les clients prisma pour chaque service
 npx prisma generate \
 --schema=apps/auth-service/prisma/schema.prisma
+
+### automatisation des migrations pour chaque service ex: auth_service dans scripts de package.json
+db:auth:migrate": "prisma migrate dev --config apps/auth_service/prisma.config.ts"
+"db:auth:generate": "prisma generate --config apps/auth_service/prisma.config.ts", 
+on lance la migration avec la commande "npm run db:auth:migrate"
+"npm run db:auth:generate" pour generer les clients prisma apres la migration
+
+### commande pour prisma format en fonction du schema service que lon veut formater
+npx prisma format --schema=apps/auth_service/prisma/schema.prisma
+### avec automatisation dans package.json
+ "db:auth:format": "prisma format --schema=apps/auth_service/prisma/schema.prisma",
+
+### placer le script de swagger dans le fichier main.ts de l'api gateway
+http://localhost:3000/api/
+
+### installer jwt pour l'authentification
+$ npm install --save @nestjs/jwt
+
+### installer passport
+$ npm install --save @nestjs/passport passport passport-local
+npm install @nestjs/passport  passport passport-local bcrypt passport-jwt
+
+
 
 
 
