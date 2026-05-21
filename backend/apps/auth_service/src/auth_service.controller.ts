@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Request, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Request, UseGuards, HttpStatus, HttpCode } from '@nestjs/common';
 import { AuthServiceService } from './auth_service.service';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { CreateUserDTO } from './dto/create-user.dto';
@@ -7,12 +7,13 @@ import { JwtAuthGuard } from './jwt-auth.guard';
 
 
 
-@Controller()
+@Controller('auth')
 export class AuthServiceController {
   constructor(private readonly authServiceService: AuthServiceService) {}
 
   // inscription
   @Post('register')
+  @HttpCode(HttpStatus.CREATED)
   async register(@Body() createUserDTO: CreateUserDTO) {
     return this.authServiceService.register(createUserDTO);
   }
