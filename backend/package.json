@@ -22,6 +22,8 @@
     "db:auth:studio": "prisma studio --config apps/auth_service/prisma.config.ts",
     "db:auth:migrate": "prisma migrate dev --config apps/auth_service/prisma.config.ts",
     "db:auth:generate": "prisma generate --config apps/auth_service/prisma.config.ts",
+    "db:meme:format": "prisma format --schema=apps/meme_service/prisma/schema.prisma",
+    "db:meme:studio": "prisma studio --config apps/meme_service/prisma.config.ts",
     "db:meme:migrate": "prisma migrate dev --config apps/meme_service/prisma.config.ts",
     "db:meme:generate": "prisma generate --config apps/meme_service/prisma.config.ts"
   },

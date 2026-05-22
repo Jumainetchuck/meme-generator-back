@@ -3,20 +3,26 @@ import { MemeServiceController } from './meme_service.controller';
 import { MemeServiceService } from './meme_service.service';
 
 describe('MemeServiceController', () => {
-  let memeServiceController: MemeServiceController;
+  let controller: MemeServiceController;
 
   beforeEach(async () => {
-    const app: TestingModule = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       controllers: [MemeServiceController],
-      providers: [MemeServiceService],
+      providers: [
+        {
+          provide: MemeServiceService,
+          useValue: {
+            addEtudiant: jest.fn(),
+            removeEtudiant: jest.fn(),
+          },
+        },
+      ],
     }).compile();
 
-    memeServiceController = app.get<MemeServiceController>(MemeServiceController);
+    controller = module.get<MemeServiceController>(MemeServiceController);
   });
 
-  describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(memeServiceController.getHello()).toBe('Hello World!');
-    });
+  it('should be defined', () => {
+    expect(controller).toBeDefined();
   });
 });

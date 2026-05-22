@@ -49,6 +49,37 @@ http://localhost:3000/api/
 ### installer jwt pour l'authentification
 $ npm install --save @nestjs/jwt
 
+---
+
+## FRONTEND - REACT + VITE
+
+### Créer projet React + Vite dans le dossier frontend
+npm create vite@latest . -- --template react
+
+### Installer les dépendances nécessaires
+npm install axios react-router-dom
+
+### Structure Frontend créée:
+- **Services API**: Axios configuré avec intercepteurs JWT
+- **Contexte d'authentification**: useAuth() hook personnalisé
+- **Pages**: Login, Register, Profile (protégée)
+- **Components**: PrivateRoute pour les routes protégées
+- **Styles**: CSS moderne avec gradients
+
+### Configuration CORS Backend:
+- CORS activé dans main.ts du auth_service
+- Autorise les requêtes depuis http://localhost:5173 et http://localhost:3000
+
+### URLs et Ports:
+- Frontend: http://localhost:5173
+- Backend Auth Service: http://localhost:5552/api
+- API Endpoints: /api/register, /api/login, /api/profile
+
+### Lancer le frontend:
+npm run dev
+
+### Voir SETUP.md pour guide complet d'installation
+
 ### installer passport
 $ npm install --save @nestjs/passport passport passport-local
 npm install @nestjs/passport  passport passport-local bcrypt passport-jwt
@@ -86,3 +117,7 @@ npm install --save-dev @prisma/adapter-mariadb
 
 ### paquets pour gerer la config typescript de prisma
 npm install @prisma/config dotenv --save-dev
+
+
+
+
