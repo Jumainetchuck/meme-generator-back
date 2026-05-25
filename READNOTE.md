@@ -86,3 +86,18 @@ npm install --save-dev @prisma/adapter-mariadb
 
 ### paquets pour gerer la config typescript de prisma
 npm install @prisma/config dotenv --save-dev
+
+
+### gestion des fichier
+npm install uuid multer
+### installer les types pour multer
+npm install @types/multer --save-dev
+npm install -D @types/multer
+
+
+### installer nestjs axios
+npm install @nestjs/axios axios
+
+
+### installer form-data pour les requetes multipart/form-data
+npm install form-data

@@ -5,6 +5,12 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(ApiGatewayModule);
 
+  // script pour contourner la securite CORS et communiquer avec une autre application sur un autre port
+  app.enableCors({
+  origin: 'http://localhost:5173', // ou '*' pour la dev
+  credentials: true,
+});
+
 
    // config swagger
   const config = new DocumentBuilder()
@@ -19,5 +25,6 @@ async function bootstrap() {
 
 
   await app.listen(process.env.PORT ?? 3000);
+  console.log(`Application successfully running on ${await app.getUrl()}`);
 }
 bootstrap();

@@ -22,10 +22,17 @@
     "db:auth:studio": "prisma studio --config apps/auth_service/prisma.config.ts",
     "db:auth:migrate": "prisma migrate dev --config apps/auth_service/prisma.config.ts",
     "db:auth:generate": "prisma generate --config apps/auth_service/prisma.config.ts",
+    "db:meme:format": "prisma format --schema=apps/meme_service/prisma/schema.prisma",
+    "db:meme:studio": "prisma studio --config apps/meme_service/prisma.config.ts",
     "db:meme:migrate": "prisma migrate dev --config apps/meme_service/prisma.config.ts",
-    "db:meme:generate": "prisma generate --config apps/meme_service/prisma.config.ts"
+    "db:meme:generate": "prisma generate --config apps/meme_service/prisma.config.ts",
+    "db:media:format": "prisma format --schema=apps/media_service/prisma/schema.prisma",
+    "db:media:studio": "prisma studio --config apps/media_service/prisma.config.ts",
+    "db:media:migrate": "prisma migrate dev --config apps/media_service/prisma.config.ts",
+    "db:media:generate": "prisma generate --config apps/media_service/prisma.config.ts"
   },
   "dependencies": {
+    "@nestjs/axios": "^4.0.1",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.4",
     "@nestjs/core": "^11.0.1",
@@ -35,15 +42,20 @@
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/swagger": "^11.4.3",
     "@prisma/client": "^7.8.0",
+    "axios": "^1.16.1",
     "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.15.1",
     "dotenv": "^17.4.2",
+    "form-data": "^4.0.5",
+    "multer": "^2.1.1",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "uuid": "^14.0.0",
+    "zustand": "^5.0.13"
   },
   "devDependencies": {
     "@nestjs/cli": "^11.0.0",
@@ -53,6 +65,7 @@
     "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.0",
     "@types/jest": "^30.0.0",
+    "@types/multer": "^2.1.0",
     "@types/node": "^24.0.0",
     "@types/passport-jwt": "^4.0.1",
     "@types/supertest": "^7.0.0",
