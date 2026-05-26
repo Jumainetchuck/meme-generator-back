@@ -1,0 +1,108 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+  //   output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum MemeVisibility {
+  PRIVATE
+  PUBLIC
+  TEMPORARY
+}
+
+enum MemeStatus {
+  DRAFT
+  COMPLETED
+  DELETED
+}
+
+// model Meme {
+//   id         Int            @id @default(autoincrement())
+//   title      String         @unique @db.VarChar(255)
+//   ownerId    Int?           @map("owner_id")
+//   imageUrl   String         @map("image_url") @db.VarChar(255)
+//   visibility MemeVisibility @default(TEMPORARY)
+//   createdAt  DateTime       @default(now()) @map("created_at")
+//   updatedAt  DateTime       @updatedAt @map("updated_at")
+
+//   textLayers TextLayer[]
+
+//   @@index([ownerId])
+// }
+model Meme {
+  id         Int            @id @default(autoincrement())
+  title      String         @unique @db.VarChar(255)
+  imageUrl   String         @map("image_url") @db.VarChar(255)
+  
+  // Support utilisateur optionnel
+  userId     Int?           @map("user_id")  // null = guest
+  sessionId  String?        @map("session_id")  // ID session si guest
+  
+  visibility MemeVisibility @default(TEMPORARY)
+  status     MemeStatus     @default(DRAFT)
+  
+  // TTL pour guests (24h)
+  expiresAt  DateTime?      @map("expires_at")  // null = persistent
+  
+  createdAt  DateTime       @default(now()) @map("created_at")
+  updatedAt  DateTime       @updatedAt @map("updated_at")
+
+  textLayers TextLayer[]
+  downloads  Download[]
+
+  @@index([userId])
+  @@index([sessionId])
+  @@index([expiresAt])
+}
+
+model TextLayer {
+  id          Int    @id @default(autoincrement())
+  memeId      Int    @map("meme_id")
+  content     String @db.VarChar(255)
+  xPosition   Float  @map("x_position")
+  yPosition   Float  @map("y_position")
+  fontSize    Int    @default(32) @map("font_size")
+  fontFamily  String @default("impact") @map("font_family") @db.VarChar(255)
+  color       String @default("#FFFFFF") @db.VarChar(255)
+  strokeColor String @default("#000000") @map("stroke_color") @db.VarChar(255)
+  rotation    Float  @default(0)
+  zIndex      Int    @default(0) @map("z_index")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  meme Meme @relation(fields: [memeId], references: [id], onDelete: Cascade)
+
+  @@index([memeId])
+}
+
+// ✅ Nouveau : Tracker les téléchargements
+model Download {
+  id        Int      @id @default(autoincrement())
+  memeId    Int      @map("meme_id")
+  userId    Int?     @map("user_id")  // null = guest
+  sessionId String?  @map("session_id")
+  
+  downloadedAt DateTime @default(now()) @map("downloaded_at")
+  
+  meme Meme @relation(fields: [memeId], references: [id], onDelete: Cascade)
+  
+  @@index([memeId])
+  @@index([userId])
+  
+}
+
+model Template {
+  id       Int    @id @default(autoincrement())
+  name     String @db.VarChar(255)
+  imageUrl String @map("image_url") @db.VarChar(255)
+  category String @db.VarChar(255)
+}
