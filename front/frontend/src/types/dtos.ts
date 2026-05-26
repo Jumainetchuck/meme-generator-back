@@ -14,12 +14,14 @@ export interface CreateTextLayerDto {
   color?: string;
   strokeColor?: string;
   rotation?: number;
+  /** 0=gauche, 1=centré, 2=droite (alignement du texte) */
+  zIndex?: number;
 }
 
-// ✅ Ajouter cette interface
 export interface TextLayer extends CreateTextLayerDto {
   id: number;
   memeId: number;
+  zIndex?: number;
 }
 
 // ✅ Ajouter cette interface

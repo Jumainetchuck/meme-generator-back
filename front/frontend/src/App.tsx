@@ -1,16 +1,20 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
-import { MemeEditor } from './pages/MemeEditor'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { MemeEditor } from './pages/MemeEditor';
+import { AuthLayout, LoginForm, RegisterForm } from './pages/AuthPage';
 
-function App(){
-  return(
-    <div>
-      <MemeEditor />
-    </div>
-  )
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<MemeEditor />} />
+        <Route path="/auth" element={<AuthLayout />}>
+          <Route index element={<Navigate to="login" replace />} />
+          <Route path="login" element={<LoginForm />} />
+          <Route path="register" element={<RegisterForm />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;

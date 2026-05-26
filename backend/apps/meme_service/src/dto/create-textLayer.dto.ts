@@ -35,4 +35,11 @@ export class CreateTextLayerDto {
   strokeColor?: string;
 
   rotation?: number;
+
+  /** Alignement : 0=gauche, 1=centré, 2=droite */
+  @IsNumber()
+  @IsOptional()
+  @Min(0)
+  @Max(2)
+  zIndex?: number;
 }

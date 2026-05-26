@@ -19,6 +19,13 @@ dotenv.config({
 
 async function bootstrap() {
   const app = await NestFactory.create(MediaServiceModule);
+
+  // Activer CORS pour la communication API Gateway et frontend en dev
+  app.enableCors({
+    origin: ['http://localhost:3000', 'http://localhost:5173'],
+    credentials: true,
+  });
+
   const port = process.env.PORT ?? 5554;
   await app.listen(port);
   console.log(`Media Service running on http://localhost:${port}`);

@@ -101,3 +101,9 @@ npm install @nestjs/axios axios
 
 ### installer form-data pour les requetes multipart/form-data
 npm install form-data
+
+### servir les fichier uploades publiquement
+npm install @nestjs/serve-static serve-static
+
+
+### est l’adapter qui permet à NestJS d’utiliser Express + Multer + upload de fichiers.

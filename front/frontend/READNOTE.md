@@ -9,3 +9,6 @@ npx tailwindcss init -p
 
 ### installer zustant
 npm install zustand
+
+### installer react router
+npm install react-router-dom

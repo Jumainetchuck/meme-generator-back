@@ -140,7 +140,7 @@ export class MemeServiceService {
 
   //   return meme;
   // }
-  // ✅ Récupérer meme (vérifier permissions)
+  // Récupérer meme et vérifier permissions
 async getMeme(memeId: number, userId?: number, sessionId?: string) {
   const meme = await this.prisma.meme.findUnique({
     where: { id: memeId },
@@ -216,8 +216,29 @@ async getMeme(memeId: number, userId?: number, sessionId?: string) {
   }
 
 
+  private assertCanModifyMeme(
+    meme: { userId: number | null; sessionId: string | null },
+    userId?: number,
+    sessionId?: string,
+  ): void {
+    if (meme.userId) {
+      if (userId !== meme.userId) {
+        throw new ForbiddenException('Access denied');
+      }
+      return;
+    }
+    if (!sessionId || meme.sessionId !== sessionId) {
+      throw new ForbiddenException('Access denied');
+    }
+  }
+
   // creation d'un texte
-  async addTextLayer( memeId: number, data: CreateTextLayerDto, userId: number ) {
+  async addTextLayer(
+    memeId: number,
+    data: CreateTextLayerDto,
+    userId?: number,
+    sessionId?: string,
+  ) {
     const meme = await this.prisma.meme.findUnique({
       where: { id: memeId },
     });
@@ -226,9 +247,7 @@ async getMeme(memeId: number, userId?: number, sessionId?: string) {
       throw new NotFoundException('Meme not found');
     }
 
-    if (meme.userId !== userId) {
-      throw new ForbiddenException('Access denied');
-    }
+    this.assertCanModifyMeme(meme, userId, sessionId);
 
     return this.prisma.textLayer.create({
       data: {
@@ -312,7 +331,7 @@ async getMeme(memeId: number, userId?: number, sessionId?: string) {
   }
 
 
-  // ✅ Récupérer la galerie de l'utilisateur
+  // Récupérer la galerie de l'utilisateur
   async getUserGallery(userId: number) {
     const memes = await this.prisma.meme.findMany({
       where: {

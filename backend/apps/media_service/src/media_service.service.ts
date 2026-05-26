@@ -12,7 +12,10 @@ import 'dotenv/config';
 
 @Injectable()
 export class MediaServiceService {
-  private uploadDir = process.env.STORAGE_PATH || './uploads';
+  private uploadDir = path.resolve(
+    process.cwd(),
+    process.env.STORAGE_PATH || 'uploads',
+  );
 
   constructor() {
     this.ensureUploadDirExists();
@@ -129,7 +132,11 @@ export class MediaServiceService {
   sessionId?: string
 ): Promise<any> {
   try {
-    const url = `http://localhost:5553/memes/${memeId}`;
+    const params = new URLSearchParams();
+    if (sessionId) params.set('sessionId', sessionId);
+    if (userId != null) params.set('userId', String(userId));
+    const qs = params.toString();
+    const url = `http://localhost:5553/memes/${memeId}${qs ? `?${qs}` : ''}`;
     const response = await fetch(url);
     
     if (!response.ok) {

@@ -7,7 +7,7 @@ async function bootstrap() {
 
   // script pour contourner la securite CORS et communiquer avec une autre application sur un autre port
   app.enableCors({
-  origin: 'http://localhost:5173', // ou '*' pour la dev
+  origin: 'http://localhost:5173', // 
   credentials: true,
 });
 

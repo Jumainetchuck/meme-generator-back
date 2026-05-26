@@ -10,7 +10,7 @@ import { MediaServiceService } from './media_service.service';
 export class MediaServiceController {
   constructor(private readonly mediaService: MediaServiceService) {}
 
-  // ✅ Upload image
+  // to Upload image
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   async uploadImage(
@@ -33,7 +33,7 @@ export class MediaServiceController {
     };
   }
 
-  // ✅ Download meme
+  // to download meme
   @Get('download/:memeId')
   async downloadMeme(
     @Param('memeId', ParseIntPipe) memeId: number,
@@ -80,7 +80,7 @@ export class MediaServiceController {
   //   });
   // }
 
-  // ✅ Delete image
+  // supprimer l' image
   @Delete(':fileId')
   async deleteImage(
     @Param('fileId') fileId: string,

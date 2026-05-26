@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, ParseIntPipe, Query } from '@nestjs/common';
 import { MemeServiceService } from './meme_service.service';
 import { CreateMemeDto } from './dto/create-meme.dto';
 import { UpdateMemeDto } from './dto/update-meme.dto';
@@ -17,8 +17,20 @@ export class MemeServiceController {
 
   // recuperer un meme
   @Get('/:id')
-  getMeme(@Param('id', ParseIntPipe) id: number) {
-    return this.memeService.getMeme(id);
+  getMeme(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('sessionId') sessionId?: string,
+    @Query('userId') userId?: number,
+  ) {
+    return this.memeService.getMeme(id, userId, sessionId);
+  }
+
+  @Post('/:id/download')
+  recordDownload(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: { userId?: number; sessionId?: string },
+  ) {
+    return this.memeService.recordDownload(id, body.userId, body.sessionId);
   }
 
   // creer un meme
@@ -39,7 +51,7 @@ export class MemeServiceController {
   //   const { userId: _,  ...data } = Body;
   //   return this.memeService.updateMeme(id, data as UpdateMemeDto, userId);
   // }
-    // ✅ CORRECTION : Extraire userId du body, pas l'inclure dans data
+    //  Extraire userId du body, pas l'inclure dans data
   @Put('/:id')
   updateMeme(
     @Param('id', ParseIntPipe) id: number, 
@@ -69,11 +81,14 @@ export class MemeServiceController {
   addTextLayer(
     @Param('memeId', ParseIntPipe) memeId: number, 
     @Body() body: any,
-    @Body('userId') userId: number
   ) {
-    // Créer un nouvel objet sans userId
-    const { userId: _, ...data } = body;
-    return this.memeService.addTextLayer(memeId, data as CreateTextLayerDto, userId);
+    const { userId, sessionId, ...data } = body;
+    return this.memeService.addTextLayer(
+      memeId,
+      data as CreateTextLayerDto,
+      userId,
+      sessionId,
+    );
   }
 
 
