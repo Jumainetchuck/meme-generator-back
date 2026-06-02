@@ -107,3 +107,7 @@ npm install @nestjs/serve-static serve-static
 
 
 ### est l’adapter qui permet à NestJS d’utiliser Express + Multer + upload de fichiers.
+
+
+### bibliothrque pour dessiner des textes sur l'image
+npm install sharp

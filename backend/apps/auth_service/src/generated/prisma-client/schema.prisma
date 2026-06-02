@@ -5,7 +5,8 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma-client"
+  output   = "../src/generated/prisma-client" //  isolé par service, c'est mieux ainsi a cause de mon architecture microservices, chaque service a son propre client prisma
+  //   output   = "../generated/prisma"
 }
 
 datasource db {

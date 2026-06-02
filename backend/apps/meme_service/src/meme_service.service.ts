@@ -141,32 +141,38 @@ export class MemeServiceService {
   //   return meme;
   // }
   // Récupérer meme et vérifier permissions
+  
 async getMeme(memeId: number, userId?: number, sessionId?: string) {
   const meme = await this.prisma.meme.findUnique({
     where: { id: memeId },
     include: { textLayers: true },
   });
 
-  if (!meme) {
-    throw new NotFoundException('Meme not found');
-  }
+  if (!meme) throw new NotFoundException('Meme not found');
 
-  // Vérifier expiration
+  // Log temporaire pour m'aider dans le déboguage
+  console.log('meme.userId:', meme.userId, '| reçu userId:', userId, typeof userId);
+  console.log('meme.sessionId:', meme.sessionId);
+  console.log('reçu sessionId:', sessionId);
+
   if (meme.expiresAt && new Date() > meme.expiresAt) {
-    // Supprimer automatiquement
     await this.prisma.meme.delete({ where: { id: memeId } });
     throw new NotFoundException('Meme has expired');
   }
 
-  // Vérifier permissions
-  if (meme.userId && meme.userId !== userId) {
-    throw new ForbiddenException('Access denied');
-  }
-  if (!meme.userId && meme.sessionId !== sessionId) {
+  // Meme appartenant à un user connecté
+  if (meme.userId) {
+    if (meme.userId === userId) return meme;
     throw new ForbiddenException('Access denied');
   }
 
-  return meme;
+  // Meme guest : accepter si sessionId correspond
+  //    OU si l'utilisateur connecté envoie le bon sessionId
+   // Meme guest : accepter si le sessionId correspond
+  // (que l'appelant soit connecté ou non, le sessionId suffit)
+  if (meme.sessionId && meme.sessionId === sessionId) return meme;
+
+  throw new ForbiddenException('Access denied');
 }
 
 
@@ -347,11 +353,6 @@ async getMeme(memeId: number, userId?: number, sessionId?: string) {
 
     return memes;
   }
-
-
-
-  
-
 
 
 }
