@@ -29,6 +29,11 @@ export type TextLayer = $Result.DefaultSelection<Prisma.$TextLayerPayload>
  */
 export type Download = $Result.DefaultSelection<Prisma.$DownloadPayload>
 /**
+ * Model MemeShare
+ * 
+ */
+export type MemeShare = $Result.DefaultSelection<Prisma.$MemeSharePayload>
+/**
  * Model Template
  * 
  */
@@ -215,6 +220,16 @@ export class PrismaClient<
     * ```
     */
   get download(): Prisma.DownloadDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.memeShare`: Exposes CRUD operations for the **MemeShare** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more MemeShares
+    * const memeShares = await prisma.memeShare.findMany()
+    * ```
+    */
+  get memeShare(): Prisma.MemeShareDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.template`: Exposes CRUD operations for the **Template** model.
@@ -662,6 +677,7 @@ export namespace Prisma {
     Meme: 'Meme',
     TextLayer: 'TextLayer',
     Download: 'Download',
+    MemeShare: 'MemeShare',
     Template: 'Template'
   };
 
@@ -678,7 +694,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "meme" | "textLayer" | "download" | "template"
+      modelProps: "meme" | "textLayer" | "download" | "memeShare" | "template"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -880,6 +896,72 @@ export namespace Prisma {
           }
         }
       }
+      MemeShare: {
+        payload: Prisma.$MemeSharePayload<ExtArgs>
+        fields: Prisma.MemeShareFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MemeShareFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MemeSharePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MemeShareFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MemeSharePayload>
+          }
+          findFirst: {
+            args: Prisma.MemeShareFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MemeSharePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MemeShareFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MemeSharePayload>
+          }
+          findMany: {
+            args: Prisma.MemeShareFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MemeSharePayload>[]
+          }
+          create: {
+            args: Prisma.MemeShareCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MemeSharePayload>
+          }
+          createMany: {
+            args: Prisma.MemeShareCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.MemeShareDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MemeSharePayload>
+          }
+          update: {
+            args: Prisma.MemeShareUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MemeSharePayload>
+          }
+          deleteMany: {
+            args: Prisma.MemeShareDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MemeShareUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.MemeShareUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MemeSharePayload>
+          }
+          aggregate: {
+            args: Prisma.MemeShareAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMemeShare>
+          }
+          groupBy: {
+            args: Prisma.MemeShareGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MemeShareGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MemeShareCountArgs<ExtArgs>
+            result: $Utils.Optional<MemeShareCountAggregateOutputType> | number
+          }
+        }
+      }
       Template: {
         payload: Prisma.$TemplatePayload<ExtArgs>
         fields: Prisma.TemplateFieldRefs
@@ -1057,6 +1139,7 @@ export namespace Prisma {
     meme?: MemeOmit
     textLayer?: TextLayerOmit
     download?: DownloadOmit
+    memeShare?: MemeShareOmit
     template?: TemplateOmit
   }
 
@@ -1138,11 +1221,13 @@ export namespace Prisma {
    */
 
   export type MemeCountOutputType = {
+    shares: number
     textLayers: number
     downloads: number
   }
 
   export type MemeCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    shares?: boolean | MemeCountOutputTypeCountSharesArgs
     textLayers?: boolean | MemeCountOutputTypeCountTextLayersArgs
     downloads?: boolean | MemeCountOutputTypeCountDownloadsArgs
   }
@@ -1156,6 +1241,13 @@ export namespace Prisma {
      * Select specific fields to fetch from the MemeCountOutputType
      */
     select?: MemeCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * MemeCountOutputType without action
+   */
+  export type MemeCountOutputTypeCountSharesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MemeShareWhereInput
   }
 
   /**
@@ -1419,6 +1511,7 @@ export namespace Prisma {
     expiresAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    shares?: boolean | Meme$sharesArgs<ExtArgs>
     textLayers?: boolean | Meme$textLayersArgs<ExtArgs>
     downloads?: boolean | Meme$downloadsArgs<ExtArgs>
     _count?: boolean | MemeCountOutputTypeDefaultArgs<ExtArgs>
@@ -1441,6 +1534,7 @@ export namespace Prisma {
 
   export type MemeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "imageUrl" | "userId" | "sessionId" | "visibility" | "status" | "expiresAt" | "createdAt" | "updatedAt", ExtArgs["result"]["meme"]>
   export type MemeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    shares?: boolean | Meme$sharesArgs<ExtArgs>
     textLayers?: boolean | Meme$textLayersArgs<ExtArgs>
     downloads?: boolean | Meme$downloadsArgs<ExtArgs>
     _count?: boolean | MemeCountOutputTypeDefaultArgs<ExtArgs>
@@ -1449,6 +1543,7 @@ export namespace Prisma {
   export type $MemePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Meme"
     objects: {
+      shares: Prisma.$MemeSharePayload<ExtArgs>[]
       textLayers: Prisma.$TextLayerPayload<ExtArgs>[]
       downloads: Prisma.$DownloadPayload<ExtArgs>[]
     }
@@ -1803,6 +1898,7 @@ export namespace Prisma {
    */
   export interface Prisma__MemeClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    shares<T extends Meme$sharesArgs<ExtArgs> = {}>(args?: Subset<T, Meme$sharesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MemeSharePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     textLayers<T extends Meme$textLayersArgs<ExtArgs> = {}>(args?: Subset<T, Meme$textLayersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TextLayerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     downloads<T extends Meme$downloadsArgs<ExtArgs> = {}>(args?: Subset<T, Meme$downloadsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DownloadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -2189,6 +2285,30 @@ export namespace Prisma {
      * Limit how many Memes to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Meme.shares
+   */
+  export type Meme$sharesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemeShare
+     */
+    select?: MemeShareSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemeShare
+     */
+    omit?: MemeShareOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemeShareInclude<ExtArgs> | null
+    where?: MemeShareWhereInput
+    orderBy?: MemeShareOrderByWithRelationInput | MemeShareOrderByWithRelationInput[]
+    cursor?: MemeShareWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MemeShareScalarFieldEnum | MemeShareScalarFieldEnum[]
   }
 
   /**
@@ -4315,6 +4435,1026 @@ export namespace Prisma {
 
 
   /**
+   * Model MemeShare
+   */
+
+  export type AggregateMemeShare = {
+    _count: MemeShareCountAggregateOutputType | null
+    _avg: MemeShareAvgAggregateOutputType | null
+    _sum: MemeShareSumAggregateOutputType | null
+    _min: MemeShareMinAggregateOutputType | null
+    _max: MemeShareMaxAggregateOutputType | null
+  }
+
+  export type MemeShareAvgAggregateOutputType = {
+    id: number | null
+    memeId: number | null
+    userId: number | null
+  }
+
+  export type MemeShareSumAggregateOutputType = {
+    id: number | null
+    memeId: number | null
+    userId: number | null
+  }
+
+  export type MemeShareMinAggregateOutputType = {
+    id: number | null
+    memeId: number | null
+    platform: string | null
+    userId: number | null
+    sessionId: string | null
+    shareUrl: string | null
+    isPublic: boolean | null
+    sharedAt: Date | null
+    expiresAt: Date | null
+  }
+
+  export type MemeShareMaxAggregateOutputType = {
+    id: number | null
+    memeId: number | null
+    platform: string | null
+    userId: number | null
+    sessionId: string | null
+    shareUrl: string | null
+    isPublic: boolean | null
+    sharedAt: Date | null
+    expiresAt: Date | null
+  }
+
+  export type MemeShareCountAggregateOutputType = {
+    id: number
+    memeId: number
+    platform: number
+    userId: number
+    sessionId: number
+    shareUrl: number
+    isPublic: number
+    sharedAt: number
+    expiresAt: number
+    _all: number
+  }
+
+
+  export type MemeShareAvgAggregateInputType = {
+    id?: true
+    memeId?: true
+    userId?: true
+  }
+
+  export type MemeShareSumAggregateInputType = {
+    id?: true
+    memeId?: true
+    userId?: true
+  }
+
+  export type MemeShareMinAggregateInputType = {
+    id?: true
+    memeId?: true
+    platform?: true
+    userId?: true
+    sessionId?: true
+    shareUrl?: true
+    isPublic?: true
+    sharedAt?: true
+    expiresAt?: true
+  }
+
+  export type MemeShareMaxAggregateInputType = {
+    id?: true
+    memeId?: true
+    platform?: true
+    userId?: true
+    sessionId?: true
+    shareUrl?: true
+    isPublic?: true
+    sharedAt?: true
+    expiresAt?: true
+  }
+
+  export type MemeShareCountAggregateInputType = {
+    id?: true
+    memeId?: true
+    platform?: true
+    userId?: true
+    sessionId?: true
+    shareUrl?: true
+    isPublic?: true
+    sharedAt?: true
+    expiresAt?: true
+    _all?: true
+  }
+
+  export type MemeShareAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MemeShare to aggregate.
+     */
+    where?: MemeShareWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MemeShares to fetch.
+     */
+    orderBy?: MemeShareOrderByWithRelationInput | MemeShareOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MemeShareWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MemeShares from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MemeShares.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned MemeShares
+    **/
+    _count?: true | MemeShareCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: MemeShareAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: MemeShareSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MemeShareMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MemeShareMaxAggregateInputType
+  }
+
+  export type GetMemeShareAggregateType<T extends MemeShareAggregateArgs> = {
+        [P in keyof T & keyof AggregateMemeShare]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMemeShare[P]>
+      : GetScalarType<T[P], AggregateMemeShare[P]>
+  }
+
+
+
+
+  export type MemeShareGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MemeShareWhereInput
+    orderBy?: MemeShareOrderByWithAggregationInput | MemeShareOrderByWithAggregationInput[]
+    by: MemeShareScalarFieldEnum[] | MemeShareScalarFieldEnum
+    having?: MemeShareScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MemeShareCountAggregateInputType | true
+    _avg?: MemeShareAvgAggregateInputType
+    _sum?: MemeShareSumAggregateInputType
+    _min?: MemeShareMinAggregateInputType
+    _max?: MemeShareMaxAggregateInputType
+  }
+
+  export type MemeShareGroupByOutputType = {
+    id: number
+    memeId: number
+    platform: string
+    userId: number | null
+    sessionId: string | null
+    shareUrl: string
+    isPublic: boolean
+    sharedAt: Date
+    expiresAt: Date | null
+    _count: MemeShareCountAggregateOutputType | null
+    _avg: MemeShareAvgAggregateOutputType | null
+    _sum: MemeShareSumAggregateOutputType | null
+    _min: MemeShareMinAggregateOutputType | null
+    _max: MemeShareMaxAggregateOutputType | null
+  }
+
+  type GetMemeShareGroupByPayload<T extends MemeShareGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MemeShareGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MemeShareGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MemeShareGroupByOutputType[P]>
+            : GetScalarType<T[P], MemeShareGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MemeShareSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    memeId?: boolean
+    platform?: boolean
+    userId?: boolean
+    sessionId?: boolean
+    shareUrl?: boolean
+    isPublic?: boolean
+    sharedAt?: boolean
+    expiresAt?: boolean
+    meme?: boolean | MemeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["memeShare"]>
+
+
+
+  export type MemeShareSelectScalar = {
+    id?: boolean
+    memeId?: boolean
+    platform?: boolean
+    userId?: boolean
+    sessionId?: boolean
+    shareUrl?: boolean
+    isPublic?: boolean
+    sharedAt?: boolean
+    expiresAt?: boolean
+  }
+
+  export type MemeShareOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "memeId" | "platform" | "userId" | "sessionId" | "shareUrl" | "isPublic" | "sharedAt" | "expiresAt", ExtArgs["result"]["memeShare"]>
+  export type MemeShareInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    meme?: boolean | MemeDefaultArgs<ExtArgs>
+  }
+
+  export type $MemeSharePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "MemeShare"
+    objects: {
+      meme: Prisma.$MemePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      memeId: number
+      platform: string
+      userId: number | null
+      sessionId: string | null
+      shareUrl: string
+      isPublic: boolean
+      sharedAt: Date
+      expiresAt: Date | null
+    }, ExtArgs["result"]["memeShare"]>
+    composites: {}
+  }
+
+  type MemeShareGetPayload<S extends boolean | null | undefined | MemeShareDefaultArgs> = $Result.GetResult<Prisma.$MemeSharePayload, S>
+
+  type MemeShareCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<MemeShareFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: MemeShareCountAggregateInputType | true
+    }
+
+  export interface MemeShareDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['MemeShare'], meta: { name: 'MemeShare' } }
+    /**
+     * Find zero or one MemeShare that matches the filter.
+     * @param {MemeShareFindUniqueArgs} args - Arguments to find a MemeShare
+     * @example
+     * // Get one MemeShare
+     * const memeShare = await prisma.memeShare.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends MemeShareFindUniqueArgs>(args: SelectSubset<T, MemeShareFindUniqueArgs<ExtArgs>>): Prisma__MemeShareClient<$Result.GetResult<Prisma.$MemeSharePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one MemeShare that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {MemeShareFindUniqueOrThrowArgs} args - Arguments to find a MemeShare
+     * @example
+     * // Get one MemeShare
+     * const memeShare = await prisma.memeShare.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends MemeShareFindUniqueOrThrowArgs>(args: SelectSubset<T, MemeShareFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MemeShareClient<$Result.GetResult<Prisma.$MemeSharePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MemeShare that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MemeShareFindFirstArgs} args - Arguments to find a MemeShare
+     * @example
+     * // Get one MemeShare
+     * const memeShare = await prisma.memeShare.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends MemeShareFindFirstArgs>(args?: SelectSubset<T, MemeShareFindFirstArgs<ExtArgs>>): Prisma__MemeShareClient<$Result.GetResult<Prisma.$MemeSharePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MemeShare that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MemeShareFindFirstOrThrowArgs} args - Arguments to find a MemeShare
+     * @example
+     * // Get one MemeShare
+     * const memeShare = await prisma.memeShare.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends MemeShareFindFirstOrThrowArgs>(args?: SelectSubset<T, MemeShareFindFirstOrThrowArgs<ExtArgs>>): Prisma__MemeShareClient<$Result.GetResult<Prisma.$MemeSharePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more MemeShares that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MemeShareFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all MemeShares
+     * const memeShares = await prisma.memeShare.findMany()
+     * 
+     * // Get first 10 MemeShares
+     * const memeShares = await prisma.memeShare.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const memeShareWithIdOnly = await prisma.memeShare.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends MemeShareFindManyArgs>(args?: SelectSubset<T, MemeShareFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MemeSharePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a MemeShare.
+     * @param {MemeShareCreateArgs} args - Arguments to create a MemeShare.
+     * @example
+     * // Create one MemeShare
+     * const MemeShare = await prisma.memeShare.create({
+     *   data: {
+     *     // ... data to create a MemeShare
+     *   }
+     * })
+     * 
+     */
+    create<T extends MemeShareCreateArgs>(args: SelectSubset<T, MemeShareCreateArgs<ExtArgs>>): Prisma__MemeShareClient<$Result.GetResult<Prisma.$MemeSharePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many MemeShares.
+     * @param {MemeShareCreateManyArgs} args - Arguments to create many MemeShares.
+     * @example
+     * // Create many MemeShares
+     * const memeShare = await prisma.memeShare.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends MemeShareCreateManyArgs>(args?: SelectSubset<T, MemeShareCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a MemeShare.
+     * @param {MemeShareDeleteArgs} args - Arguments to delete one MemeShare.
+     * @example
+     * // Delete one MemeShare
+     * const MemeShare = await prisma.memeShare.delete({
+     *   where: {
+     *     // ... filter to delete one MemeShare
+     *   }
+     * })
+     * 
+     */
+    delete<T extends MemeShareDeleteArgs>(args: SelectSubset<T, MemeShareDeleteArgs<ExtArgs>>): Prisma__MemeShareClient<$Result.GetResult<Prisma.$MemeSharePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one MemeShare.
+     * @param {MemeShareUpdateArgs} args - Arguments to update one MemeShare.
+     * @example
+     * // Update one MemeShare
+     * const memeShare = await prisma.memeShare.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends MemeShareUpdateArgs>(args: SelectSubset<T, MemeShareUpdateArgs<ExtArgs>>): Prisma__MemeShareClient<$Result.GetResult<Prisma.$MemeSharePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more MemeShares.
+     * @param {MemeShareDeleteManyArgs} args - Arguments to filter MemeShares to delete.
+     * @example
+     * // Delete a few MemeShares
+     * const { count } = await prisma.memeShare.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends MemeShareDeleteManyArgs>(args?: SelectSubset<T, MemeShareDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MemeShares.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MemeShareUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many MemeShares
+     * const memeShare = await prisma.memeShare.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends MemeShareUpdateManyArgs>(args: SelectSubset<T, MemeShareUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one MemeShare.
+     * @param {MemeShareUpsertArgs} args - Arguments to update or create a MemeShare.
+     * @example
+     * // Update or create a MemeShare
+     * const memeShare = await prisma.memeShare.upsert({
+     *   create: {
+     *     // ... data to create a MemeShare
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the MemeShare we want to update
+     *   }
+     * })
+     */
+    upsert<T extends MemeShareUpsertArgs>(args: SelectSubset<T, MemeShareUpsertArgs<ExtArgs>>): Prisma__MemeShareClient<$Result.GetResult<Prisma.$MemeSharePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of MemeShares.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MemeShareCountArgs} args - Arguments to filter MemeShares to count.
+     * @example
+     * // Count the number of MemeShares
+     * const count = await prisma.memeShare.count({
+     *   where: {
+     *     // ... the filter for the MemeShares we want to count
+     *   }
+     * })
+    **/
+    count<T extends MemeShareCountArgs>(
+      args?: Subset<T, MemeShareCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MemeShareCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a MemeShare.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MemeShareAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MemeShareAggregateArgs>(args: Subset<T, MemeShareAggregateArgs>): Prisma.PrismaPromise<GetMemeShareAggregateType<T>>
+
+    /**
+     * Group by MemeShare.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MemeShareGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MemeShareGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MemeShareGroupByArgs['orderBy'] }
+        : { orderBy?: MemeShareGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MemeShareGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMemeShareGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the MemeShare model
+   */
+  readonly fields: MemeShareFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for MemeShare.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MemeShareClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    meme<T extends MemeDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MemeDefaultArgs<ExtArgs>>): Prisma__MemeClient<$Result.GetResult<Prisma.$MemePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the MemeShare model
+   */
+  interface MemeShareFieldRefs {
+    readonly id: FieldRef<"MemeShare", 'Int'>
+    readonly memeId: FieldRef<"MemeShare", 'Int'>
+    readonly platform: FieldRef<"MemeShare", 'String'>
+    readonly userId: FieldRef<"MemeShare", 'Int'>
+    readonly sessionId: FieldRef<"MemeShare", 'String'>
+    readonly shareUrl: FieldRef<"MemeShare", 'String'>
+    readonly isPublic: FieldRef<"MemeShare", 'Boolean'>
+    readonly sharedAt: FieldRef<"MemeShare", 'DateTime'>
+    readonly expiresAt: FieldRef<"MemeShare", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * MemeShare findUnique
+   */
+  export type MemeShareFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemeShare
+     */
+    select?: MemeShareSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemeShare
+     */
+    omit?: MemeShareOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemeShareInclude<ExtArgs> | null
+    /**
+     * Filter, which MemeShare to fetch.
+     */
+    where: MemeShareWhereUniqueInput
+  }
+
+  /**
+   * MemeShare findUniqueOrThrow
+   */
+  export type MemeShareFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemeShare
+     */
+    select?: MemeShareSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemeShare
+     */
+    omit?: MemeShareOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemeShareInclude<ExtArgs> | null
+    /**
+     * Filter, which MemeShare to fetch.
+     */
+    where: MemeShareWhereUniqueInput
+  }
+
+  /**
+   * MemeShare findFirst
+   */
+  export type MemeShareFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemeShare
+     */
+    select?: MemeShareSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemeShare
+     */
+    omit?: MemeShareOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemeShareInclude<ExtArgs> | null
+    /**
+     * Filter, which MemeShare to fetch.
+     */
+    where?: MemeShareWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MemeShares to fetch.
+     */
+    orderBy?: MemeShareOrderByWithRelationInput | MemeShareOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MemeShares.
+     */
+    cursor?: MemeShareWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MemeShares from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MemeShares.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MemeShares.
+     */
+    distinct?: MemeShareScalarFieldEnum | MemeShareScalarFieldEnum[]
+  }
+
+  /**
+   * MemeShare findFirstOrThrow
+   */
+  export type MemeShareFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemeShare
+     */
+    select?: MemeShareSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemeShare
+     */
+    omit?: MemeShareOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemeShareInclude<ExtArgs> | null
+    /**
+     * Filter, which MemeShare to fetch.
+     */
+    where?: MemeShareWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MemeShares to fetch.
+     */
+    orderBy?: MemeShareOrderByWithRelationInput | MemeShareOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MemeShares.
+     */
+    cursor?: MemeShareWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MemeShares from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MemeShares.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MemeShares.
+     */
+    distinct?: MemeShareScalarFieldEnum | MemeShareScalarFieldEnum[]
+  }
+
+  /**
+   * MemeShare findMany
+   */
+  export type MemeShareFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemeShare
+     */
+    select?: MemeShareSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemeShare
+     */
+    omit?: MemeShareOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemeShareInclude<ExtArgs> | null
+    /**
+     * Filter, which MemeShares to fetch.
+     */
+    where?: MemeShareWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MemeShares to fetch.
+     */
+    orderBy?: MemeShareOrderByWithRelationInput | MemeShareOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing MemeShares.
+     */
+    cursor?: MemeShareWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MemeShares from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MemeShares.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MemeShares.
+     */
+    distinct?: MemeShareScalarFieldEnum | MemeShareScalarFieldEnum[]
+  }
+
+  /**
+   * MemeShare create
+   */
+  export type MemeShareCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemeShare
+     */
+    select?: MemeShareSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemeShare
+     */
+    omit?: MemeShareOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemeShareInclude<ExtArgs> | null
+    /**
+     * The data needed to create a MemeShare.
+     */
+    data: XOR<MemeShareCreateInput, MemeShareUncheckedCreateInput>
+  }
+
+  /**
+   * MemeShare createMany
+   */
+  export type MemeShareCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many MemeShares.
+     */
+    data: MemeShareCreateManyInput | MemeShareCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * MemeShare update
+   */
+  export type MemeShareUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemeShare
+     */
+    select?: MemeShareSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemeShare
+     */
+    omit?: MemeShareOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemeShareInclude<ExtArgs> | null
+    /**
+     * The data needed to update a MemeShare.
+     */
+    data: XOR<MemeShareUpdateInput, MemeShareUncheckedUpdateInput>
+    /**
+     * Choose, which MemeShare to update.
+     */
+    where: MemeShareWhereUniqueInput
+  }
+
+  /**
+   * MemeShare updateMany
+   */
+  export type MemeShareUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update MemeShares.
+     */
+    data: XOR<MemeShareUpdateManyMutationInput, MemeShareUncheckedUpdateManyInput>
+    /**
+     * Filter which MemeShares to update
+     */
+    where?: MemeShareWhereInput
+    /**
+     * Limit how many MemeShares to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * MemeShare upsert
+   */
+  export type MemeShareUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemeShare
+     */
+    select?: MemeShareSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemeShare
+     */
+    omit?: MemeShareOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemeShareInclude<ExtArgs> | null
+    /**
+     * The filter to search for the MemeShare to update in case it exists.
+     */
+    where: MemeShareWhereUniqueInput
+    /**
+     * In case the MemeShare found by the `where` argument doesn't exist, create a new MemeShare with this data.
+     */
+    create: XOR<MemeShareCreateInput, MemeShareUncheckedCreateInput>
+    /**
+     * In case the MemeShare was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MemeShareUpdateInput, MemeShareUncheckedUpdateInput>
+  }
+
+  /**
+   * MemeShare delete
+   */
+  export type MemeShareDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemeShare
+     */
+    select?: MemeShareSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemeShare
+     */
+    omit?: MemeShareOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemeShareInclude<ExtArgs> | null
+    /**
+     * Filter which MemeShare to delete.
+     */
+    where: MemeShareWhereUniqueInput
+  }
+
+  /**
+   * MemeShare deleteMany
+   */
+  export type MemeShareDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MemeShares to delete
+     */
+    where?: MemeShareWhereInput
+    /**
+     * Limit how many MemeShares to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * MemeShare without action
+   */
+  export type MemeShareDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemeShare
+     */
+    select?: MemeShareSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemeShare
+     */
+    omit?: MemeShareOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemeShareInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model Template
    */
 
@@ -5284,6 +6424,21 @@ export namespace Prisma {
   export type DownloadScalarFieldEnum = (typeof DownloadScalarFieldEnum)[keyof typeof DownloadScalarFieldEnum]
 
 
+  export const MemeShareScalarFieldEnum: {
+    id: 'id',
+    memeId: 'memeId',
+    platform: 'platform',
+    userId: 'userId',
+    sessionId: 'sessionId',
+    shareUrl: 'shareUrl',
+    isPublic: 'isPublic',
+    sharedAt: 'sharedAt',
+    expiresAt: 'expiresAt'
+  };
+
+  export type MemeShareScalarFieldEnum = (typeof MemeShareScalarFieldEnum)[keyof typeof MemeShareScalarFieldEnum]
+
+
   export const TemplateScalarFieldEnum: {
     id: 'id',
     name: 'name',
@@ -5334,6 +6489,15 @@ export namespace Prisma {
   };
 
   export type DownloadOrderByRelevanceFieldEnum = (typeof DownloadOrderByRelevanceFieldEnum)[keyof typeof DownloadOrderByRelevanceFieldEnum]
+
+
+  export const MemeShareOrderByRelevanceFieldEnum: {
+    platform: 'platform',
+    sessionId: 'sessionId',
+    shareUrl: 'shareUrl'
+  };
+
+  export type MemeShareOrderByRelevanceFieldEnum = (typeof MemeShareOrderByRelevanceFieldEnum)[keyof typeof MemeShareOrderByRelevanceFieldEnum]
 
 
   export const TemplateOrderByRelevanceFieldEnum: {
@@ -5390,6 +6554,13 @@ export namespace Prisma {
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
     
+
+
+  /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
   /**
    * Deep Input Types
    */
@@ -5409,6 +6580,7 @@ export namespace Prisma {
     expiresAt?: DateTimeNullableFilter<"Meme"> | Date | string | null
     createdAt?: DateTimeFilter<"Meme"> | Date | string
     updatedAt?: DateTimeFilter<"Meme"> | Date | string
+    shares?: MemeShareListRelationFilter
     textLayers?: TextLayerListRelationFilter
     downloads?: DownloadListRelationFilter
   }
@@ -5424,6 +6596,7 @@ export namespace Prisma {
     expiresAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    shares?: MemeShareOrderByRelationAggregateInput
     textLayers?: TextLayerOrderByRelationAggregateInput
     downloads?: DownloadOrderByRelationAggregateInput
     _relevance?: MemeOrderByRelevanceInput
@@ -5443,6 +6616,7 @@ export namespace Prisma {
     expiresAt?: DateTimeNullableFilter<"Meme"> | Date | string | null
     createdAt?: DateTimeFilter<"Meme"> | Date | string
     updatedAt?: DateTimeFilter<"Meme"> | Date | string
+    shares?: MemeShareListRelationFilter
     textLayers?: TextLayerListRelationFilter
     downloads?: DownloadListRelationFilter
   }, "id" | "title">
@@ -5637,6 +6811,84 @@ export namespace Prisma {
     downloadedAt?: DateTimeWithAggregatesFilter<"Download"> | Date | string
   }
 
+  export type MemeShareWhereInput = {
+    AND?: MemeShareWhereInput | MemeShareWhereInput[]
+    OR?: MemeShareWhereInput[]
+    NOT?: MemeShareWhereInput | MemeShareWhereInput[]
+    id?: IntFilter<"MemeShare"> | number
+    memeId?: IntFilter<"MemeShare"> | number
+    platform?: StringFilter<"MemeShare"> | string
+    userId?: IntNullableFilter<"MemeShare"> | number | null
+    sessionId?: StringNullableFilter<"MemeShare"> | string | null
+    shareUrl?: StringFilter<"MemeShare"> | string
+    isPublic?: BoolFilter<"MemeShare"> | boolean
+    sharedAt?: DateTimeFilter<"MemeShare"> | Date | string
+    expiresAt?: DateTimeNullableFilter<"MemeShare"> | Date | string | null
+    meme?: XOR<MemeScalarRelationFilter, MemeWhereInput>
+  }
+
+  export type MemeShareOrderByWithRelationInput = {
+    id?: SortOrder
+    memeId?: SortOrder
+    platform?: SortOrder
+    userId?: SortOrderInput | SortOrder
+    sessionId?: SortOrderInput | SortOrder
+    shareUrl?: SortOrder
+    isPublic?: SortOrder
+    sharedAt?: SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    meme?: MemeOrderByWithRelationInput
+    _relevance?: MemeShareOrderByRelevanceInput
+  }
+
+  export type MemeShareWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: MemeShareWhereInput | MemeShareWhereInput[]
+    OR?: MemeShareWhereInput[]
+    NOT?: MemeShareWhereInput | MemeShareWhereInput[]
+    memeId?: IntFilter<"MemeShare"> | number
+    platform?: StringFilter<"MemeShare"> | string
+    userId?: IntNullableFilter<"MemeShare"> | number | null
+    sessionId?: StringNullableFilter<"MemeShare"> | string | null
+    shareUrl?: StringFilter<"MemeShare"> | string
+    isPublic?: BoolFilter<"MemeShare"> | boolean
+    sharedAt?: DateTimeFilter<"MemeShare"> | Date | string
+    expiresAt?: DateTimeNullableFilter<"MemeShare"> | Date | string | null
+    meme?: XOR<MemeScalarRelationFilter, MemeWhereInput>
+  }, "id">
+
+  export type MemeShareOrderByWithAggregationInput = {
+    id?: SortOrder
+    memeId?: SortOrder
+    platform?: SortOrder
+    userId?: SortOrderInput | SortOrder
+    sessionId?: SortOrderInput | SortOrder
+    shareUrl?: SortOrder
+    isPublic?: SortOrder
+    sharedAt?: SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    _count?: MemeShareCountOrderByAggregateInput
+    _avg?: MemeShareAvgOrderByAggregateInput
+    _max?: MemeShareMaxOrderByAggregateInput
+    _min?: MemeShareMinOrderByAggregateInput
+    _sum?: MemeShareSumOrderByAggregateInput
+  }
+
+  export type MemeShareScalarWhereWithAggregatesInput = {
+    AND?: MemeShareScalarWhereWithAggregatesInput | MemeShareScalarWhereWithAggregatesInput[]
+    OR?: MemeShareScalarWhereWithAggregatesInput[]
+    NOT?: MemeShareScalarWhereWithAggregatesInput | MemeShareScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"MemeShare"> | number
+    memeId?: IntWithAggregatesFilter<"MemeShare"> | number
+    platform?: StringWithAggregatesFilter<"MemeShare"> | string
+    userId?: IntNullableWithAggregatesFilter<"MemeShare"> | number | null
+    sessionId?: StringNullableWithAggregatesFilter<"MemeShare"> | string | null
+    shareUrl?: StringWithAggregatesFilter<"MemeShare"> | string
+    isPublic?: BoolWithAggregatesFilter<"MemeShare"> | boolean
+    sharedAt?: DateTimeWithAggregatesFilter<"MemeShare"> | Date | string
+    expiresAt?: DateTimeNullableWithAggregatesFilter<"MemeShare"> | Date | string | null
+  }
+
   export type TemplateWhereInput = {
     AND?: TemplateWhereInput | TemplateWhereInput[]
     OR?: TemplateWhereInput[]
@@ -5697,6 +6949,7 @@ export namespace Prisma {
     expiresAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    shares?: MemeShareCreateNestedManyWithoutMemeInput
     textLayers?: TextLayerCreateNestedManyWithoutMemeInput
     downloads?: DownloadCreateNestedManyWithoutMemeInput
   }
@@ -5712,6 +6965,7 @@ export namespace Prisma {
     expiresAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    shares?: MemeShareUncheckedCreateNestedManyWithoutMemeInput
     textLayers?: TextLayerUncheckedCreateNestedManyWithoutMemeInput
     downloads?: DownloadUncheckedCreateNestedManyWithoutMemeInput
   }
@@ -5726,6 +6980,7 @@ export namespace Prisma {
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    shares?: MemeShareUpdateManyWithoutMemeNestedInput
     textLayers?: TextLayerUpdateManyWithoutMemeNestedInput
     downloads?: DownloadUpdateManyWithoutMemeNestedInput
   }
@@ -5741,6 +6996,7 @@ export namespace Prisma {
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    shares?: MemeShareUncheckedUpdateManyWithoutMemeNestedInput
     textLayers?: TextLayerUncheckedUpdateManyWithoutMemeNestedInput
     downloads?: DownloadUncheckedUpdateManyWithoutMemeNestedInput
   }
@@ -5943,6 +7199,86 @@ export namespace Prisma {
     downloadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type MemeShareCreateInput = {
+    platform: string
+    userId?: number | null
+    sessionId?: string | null
+    shareUrl: string
+    isPublic?: boolean
+    sharedAt?: Date | string
+    expiresAt?: Date | string | null
+    meme: MemeCreateNestedOneWithoutSharesInput
+  }
+
+  export type MemeShareUncheckedCreateInput = {
+    id?: number
+    memeId: number
+    platform: string
+    userId?: number | null
+    sessionId?: string | null
+    shareUrl: string
+    isPublic?: boolean
+    sharedAt?: Date | string
+    expiresAt?: Date | string | null
+  }
+
+  export type MemeShareUpdateInput = {
+    platform?: StringFieldUpdateOperationsInput | string
+    userId?: NullableIntFieldUpdateOperationsInput | number | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    shareUrl?: StringFieldUpdateOperationsInput | string
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    sharedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    meme?: MemeUpdateOneRequiredWithoutSharesNestedInput
+  }
+
+  export type MemeShareUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    memeId?: IntFieldUpdateOperationsInput | number
+    platform?: StringFieldUpdateOperationsInput | string
+    userId?: NullableIntFieldUpdateOperationsInput | number | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    shareUrl?: StringFieldUpdateOperationsInput | string
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    sharedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type MemeShareCreateManyInput = {
+    id?: number
+    memeId: number
+    platform: string
+    userId?: number | null
+    sessionId?: string | null
+    shareUrl: string
+    isPublic?: boolean
+    sharedAt?: Date | string
+    expiresAt?: Date | string | null
+  }
+
+  export type MemeShareUpdateManyMutationInput = {
+    platform?: StringFieldUpdateOperationsInput | string
+    userId?: NullableIntFieldUpdateOperationsInput | number | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    shareUrl?: StringFieldUpdateOperationsInput | string
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    sharedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type MemeShareUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    memeId?: IntFieldUpdateOperationsInput | number
+    platform?: StringFieldUpdateOperationsInput | string
+    userId?: NullableIntFieldUpdateOperationsInput | number | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    shareUrl?: StringFieldUpdateOperationsInput | string
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    sharedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type TemplateCreateInput = {
     name: string
     imageUrl: string
@@ -6077,6 +7413,12 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
+  export type MemeShareListRelationFilter = {
+    every?: MemeShareWhereInput
+    some?: MemeShareWhereInput
+    none?: MemeShareWhereInput
+  }
+
   export type TextLayerListRelationFilter = {
     every?: TextLayerWhereInput
     some?: TextLayerWhereInput
@@ -6092,6 +7434,10 @@ export namespace Prisma {
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
+  }
+
+  export type MemeShareOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type TextLayerOrderByRelationAggregateInput = {
@@ -6421,6 +7767,73 @@ export namespace Prisma {
     userId?: SortOrder
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type MemeShareOrderByRelevanceInput = {
+    fields: MemeShareOrderByRelevanceFieldEnum | MemeShareOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type MemeShareCountOrderByAggregateInput = {
+    id?: SortOrder
+    memeId?: SortOrder
+    platform?: SortOrder
+    userId?: SortOrder
+    sessionId?: SortOrder
+    shareUrl?: SortOrder
+    isPublic?: SortOrder
+    sharedAt?: SortOrder
+    expiresAt?: SortOrder
+  }
+
+  export type MemeShareAvgOrderByAggregateInput = {
+    id?: SortOrder
+    memeId?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type MemeShareMaxOrderByAggregateInput = {
+    id?: SortOrder
+    memeId?: SortOrder
+    platform?: SortOrder
+    userId?: SortOrder
+    sessionId?: SortOrder
+    shareUrl?: SortOrder
+    isPublic?: SortOrder
+    sharedAt?: SortOrder
+    expiresAt?: SortOrder
+  }
+
+  export type MemeShareMinOrderByAggregateInput = {
+    id?: SortOrder
+    memeId?: SortOrder
+    platform?: SortOrder
+    userId?: SortOrder
+    sessionId?: SortOrder
+    shareUrl?: SortOrder
+    isPublic?: SortOrder
+    sharedAt?: SortOrder
+    expiresAt?: SortOrder
+  }
+
+  export type MemeShareSumOrderByAggregateInput = {
+    id?: SortOrder
+    memeId?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type TemplateOrderByRelevanceInput = {
     fields: TemplateOrderByRelevanceFieldEnum | TemplateOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -6456,6 +7869,13 @@ export namespace Prisma {
     id?: SortOrder
   }
 
+  export type MemeShareCreateNestedManyWithoutMemeInput = {
+    create?: XOR<MemeShareCreateWithoutMemeInput, MemeShareUncheckedCreateWithoutMemeInput> | MemeShareCreateWithoutMemeInput[] | MemeShareUncheckedCreateWithoutMemeInput[]
+    connectOrCreate?: MemeShareCreateOrConnectWithoutMemeInput | MemeShareCreateOrConnectWithoutMemeInput[]
+    createMany?: MemeShareCreateManyMemeInputEnvelope
+    connect?: MemeShareWhereUniqueInput | MemeShareWhereUniqueInput[]
+  }
+
   export type TextLayerCreateNestedManyWithoutMemeInput = {
     create?: XOR<TextLayerCreateWithoutMemeInput, TextLayerUncheckedCreateWithoutMemeInput> | TextLayerCreateWithoutMemeInput[] | TextLayerUncheckedCreateWithoutMemeInput[]
     connectOrCreate?: TextLayerCreateOrConnectWithoutMemeInput | TextLayerCreateOrConnectWithoutMemeInput[]
@@ -6468,6 +7888,13 @@ export namespace Prisma {
     connectOrCreate?: DownloadCreateOrConnectWithoutMemeInput | DownloadCreateOrConnectWithoutMemeInput[]
     createMany?: DownloadCreateManyMemeInputEnvelope
     connect?: DownloadWhereUniqueInput | DownloadWhereUniqueInput[]
+  }
+
+  export type MemeShareUncheckedCreateNestedManyWithoutMemeInput = {
+    create?: XOR<MemeShareCreateWithoutMemeInput, MemeShareUncheckedCreateWithoutMemeInput> | MemeShareCreateWithoutMemeInput[] | MemeShareUncheckedCreateWithoutMemeInput[]
+    connectOrCreate?: MemeShareCreateOrConnectWithoutMemeInput | MemeShareCreateOrConnectWithoutMemeInput[]
+    createMany?: MemeShareCreateManyMemeInputEnvelope
+    connect?: MemeShareWhereUniqueInput | MemeShareWhereUniqueInput[]
   }
 
   export type TextLayerUncheckedCreateNestedManyWithoutMemeInput = {
@@ -6516,6 +7943,20 @@ export namespace Prisma {
     set?: Date | string
   }
 
+  export type MemeShareUpdateManyWithoutMemeNestedInput = {
+    create?: XOR<MemeShareCreateWithoutMemeInput, MemeShareUncheckedCreateWithoutMemeInput> | MemeShareCreateWithoutMemeInput[] | MemeShareUncheckedCreateWithoutMemeInput[]
+    connectOrCreate?: MemeShareCreateOrConnectWithoutMemeInput | MemeShareCreateOrConnectWithoutMemeInput[]
+    upsert?: MemeShareUpsertWithWhereUniqueWithoutMemeInput | MemeShareUpsertWithWhereUniqueWithoutMemeInput[]
+    createMany?: MemeShareCreateManyMemeInputEnvelope
+    set?: MemeShareWhereUniqueInput | MemeShareWhereUniqueInput[]
+    disconnect?: MemeShareWhereUniqueInput | MemeShareWhereUniqueInput[]
+    delete?: MemeShareWhereUniqueInput | MemeShareWhereUniqueInput[]
+    connect?: MemeShareWhereUniqueInput | MemeShareWhereUniqueInput[]
+    update?: MemeShareUpdateWithWhereUniqueWithoutMemeInput | MemeShareUpdateWithWhereUniqueWithoutMemeInput[]
+    updateMany?: MemeShareUpdateManyWithWhereWithoutMemeInput | MemeShareUpdateManyWithWhereWithoutMemeInput[]
+    deleteMany?: MemeShareScalarWhereInput | MemeShareScalarWhereInput[]
+  }
+
   export type TextLayerUpdateManyWithoutMemeNestedInput = {
     create?: XOR<TextLayerCreateWithoutMemeInput, TextLayerUncheckedCreateWithoutMemeInput> | TextLayerCreateWithoutMemeInput[] | TextLayerUncheckedCreateWithoutMemeInput[]
     connectOrCreate?: TextLayerCreateOrConnectWithoutMemeInput | TextLayerCreateOrConnectWithoutMemeInput[]
@@ -6550,6 +7991,20 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type MemeShareUncheckedUpdateManyWithoutMemeNestedInput = {
+    create?: XOR<MemeShareCreateWithoutMemeInput, MemeShareUncheckedCreateWithoutMemeInput> | MemeShareCreateWithoutMemeInput[] | MemeShareUncheckedCreateWithoutMemeInput[]
+    connectOrCreate?: MemeShareCreateOrConnectWithoutMemeInput | MemeShareCreateOrConnectWithoutMemeInput[]
+    upsert?: MemeShareUpsertWithWhereUniqueWithoutMemeInput | MemeShareUpsertWithWhereUniqueWithoutMemeInput[]
+    createMany?: MemeShareCreateManyMemeInputEnvelope
+    set?: MemeShareWhereUniqueInput | MemeShareWhereUniqueInput[]
+    disconnect?: MemeShareWhereUniqueInput | MemeShareWhereUniqueInput[]
+    delete?: MemeShareWhereUniqueInput | MemeShareWhereUniqueInput[]
+    connect?: MemeShareWhereUniqueInput | MemeShareWhereUniqueInput[]
+    update?: MemeShareUpdateWithWhereUniqueWithoutMemeInput | MemeShareUpdateWithWhereUniqueWithoutMemeInput[]
+    updateMany?: MemeShareUpdateManyWithWhereWithoutMemeInput | MemeShareUpdateManyWithWhereWithoutMemeInput[]
+    deleteMany?: MemeShareScalarWhereInput | MemeShareScalarWhereInput[]
   }
 
   export type TextLayerUncheckedUpdateManyWithoutMemeNestedInput = {
@@ -6614,6 +8069,24 @@ export namespace Prisma {
     upsert?: MemeUpsertWithoutDownloadsInput
     connect?: MemeWhereUniqueInput
     update?: XOR<XOR<MemeUpdateToOneWithWhereWithoutDownloadsInput, MemeUpdateWithoutDownloadsInput>, MemeUncheckedUpdateWithoutDownloadsInput>
+  }
+
+  export type MemeCreateNestedOneWithoutSharesInput = {
+    create?: XOR<MemeCreateWithoutSharesInput, MemeUncheckedCreateWithoutSharesInput>
+    connectOrCreate?: MemeCreateOrConnectWithoutSharesInput
+    connect?: MemeWhereUniqueInput
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
+  export type MemeUpdateOneRequiredWithoutSharesNestedInput = {
+    create?: XOR<MemeCreateWithoutSharesInput, MemeUncheckedCreateWithoutSharesInput>
+    connectOrCreate?: MemeCreateOrConnectWithoutSharesInput
+    upsert?: MemeUpsertWithoutSharesInput
+    connect?: MemeWhereUniqueInput
+    update?: XOR<XOR<MemeUpdateToOneWithWhereWithoutSharesInput, MemeUpdateWithoutSharesInput>, MemeUncheckedUpdateWithoutSharesInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -6858,6 +8331,50 @@ export namespace Prisma {
     _max?: NestedFloatFilter<$PrismaModel>
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type MemeShareCreateWithoutMemeInput = {
+    platform: string
+    userId?: number | null
+    sessionId?: string | null
+    shareUrl: string
+    isPublic?: boolean
+    sharedAt?: Date | string
+    expiresAt?: Date | string | null
+  }
+
+  export type MemeShareUncheckedCreateWithoutMemeInput = {
+    id?: number
+    platform: string
+    userId?: number | null
+    sessionId?: string | null
+    shareUrl: string
+    isPublic?: boolean
+    sharedAt?: Date | string
+    expiresAt?: Date | string | null
+  }
+
+  export type MemeShareCreateOrConnectWithoutMemeInput = {
+    where: MemeShareWhereUniqueInput
+    create: XOR<MemeShareCreateWithoutMemeInput, MemeShareUncheckedCreateWithoutMemeInput>
+  }
+
+  export type MemeShareCreateManyMemeInputEnvelope = {
+    data: MemeShareCreateManyMemeInput | MemeShareCreateManyMemeInput[]
+    skipDuplicates?: boolean
+  }
+
   export type TextLayerCreateWithoutMemeInput = {
     content: string
     xPosition: number
@@ -6918,6 +8435,37 @@ export namespace Prisma {
   export type DownloadCreateManyMemeInputEnvelope = {
     data: DownloadCreateManyMemeInput | DownloadCreateManyMemeInput[]
     skipDuplicates?: boolean
+  }
+
+  export type MemeShareUpsertWithWhereUniqueWithoutMemeInput = {
+    where: MemeShareWhereUniqueInput
+    update: XOR<MemeShareUpdateWithoutMemeInput, MemeShareUncheckedUpdateWithoutMemeInput>
+    create: XOR<MemeShareCreateWithoutMemeInput, MemeShareUncheckedCreateWithoutMemeInput>
+  }
+
+  export type MemeShareUpdateWithWhereUniqueWithoutMemeInput = {
+    where: MemeShareWhereUniqueInput
+    data: XOR<MemeShareUpdateWithoutMemeInput, MemeShareUncheckedUpdateWithoutMemeInput>
+  }
+
+  export type MemeShareUpdateManyWithWhereWithoutMemeInput = {
+    where: MemeShareScalarWhereInput
+    data: XOR<MemeShareUpdateManyMutationInput, MemeShareUncheckedUpdateManyWithoutMemeInput>
+  }
+
+  export type MemeShareScalarWhereInput = {
+    AND?: MemeShareScalarWhereInput | MemeShareScalarWhereInput[]
+    OR?: MemeShareScalarWhereInput[]
+    NOT?: MemeShareScalarWhereInput | MemeShareScalarWhereInput[]
+    id?: IntFilter<"MemeShare"> | number
+    memeId?: IntFilter<"MemeShare"> | number
+    platform?: StringFilter<"MemeShare"> | string
+    userId?: IntNullableFilter<"MemeShare"> | number | null
+    sessionId?: StringNullableFilter<"MemeShare"> | string | null
+    shareUrl?: StringFilter<"MemeShare"> | string
+    isPublic?: BoolFilter<"MemeShare"> | boolean
+    sharedAt?: DateTimeFilter<"MemeShare"> | Date | string
+    expiresAt?: DateTimeNullableFilter<"MemeShare"> | Date | string | null
   }
 
   export type TextLayerUpsertWithWhereUniqueWithoutMemeInput = {
@@ -6992,6 +8540,7 @@ export namespace Prisma {
     expiresAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    shares?: MemeShareCreateNestedManyWithoutMemeInput
     downloads?: DownloadCreateNestedManyWithoutMemeInput
   }
 
@@ -7006,6 +8555,7 @@ export namespace Prisma {
     expiresAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    shares?: MemeShareUncheckedCreateNestedManyWithoutMemeInput
     downloads?: DownloadUncheckedCreateNestedManyWithoutMemeInput
   }
 
@@ -7035,6 +8585,7 @@ export namespace Prisma {
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    shares?: MemeShareUpdateManyWithoutMemeNestedInput
     downloads?: DownloadUpdateManyWithoutMemeNestedInput
   }
 
@@ -7049,6 +8600,7 @@ export namespace Prisma {
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    shares?: MemeShareUncheckedUpdateManyWithoutMemeNestedInput
     downloads?: DownloadUncheckedUpdateManyWithoutMemeNestedInput
   }
 
@@ -7062,6 +8614,7 @@ export namespace Prisma {
     expiresAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    shares?: MemeShareCreateNestedManyWithoutMemeInput
     textLayers?: TextLayerCreateNestedManyWithoutMemeInput
   }
 
@@ -7076,6 +8629,7 @@ export namespace Prisma {
     expiresAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    shares?: MemeShareUncheckedCreateNestedManyWithoutMemeInput
     textLayers?: TextLayerUncheckedCreateNestedManyWithoutMemeInput
   }
 
@@ -7105,6 +8659,7 @@ export namespace Prisma {
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    shares?: MemeShareUpdateManyWithoutMemeNestedInput
     textLayers?: TextLayerUpdateManyWithoutMemeNestedInput
   }
 
@@ -7119,7 +8674,93 @@ export namespace Prisma {
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    shares?: MemeShareUncheckedUpdateManyWithoutMemeNestedInput
     textLayers?: TextLayerUncheckedUpdateManyWithoutMemeNestedInput
+  }
+
+  export type MemeCreateWithoutSharesInput = {
+    title: string
+    imageUrl: string
+    userId?: number | null
+    sessionId?: string | null
+    visibility?: $Enums.MemeVisibility
+    status?: $Enums.MemeStatus
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    textLayers?: TextLayerCreateNestedManyWithoutMemeInput
+    downloads?: DownloadCreateNestedManyWithoutMemeInput
+  }
+
+  export type MemeUncheckedCreateWithoutSharesInput = {
+    id?: number
+    title: string
+    imageUrl: string
+    userId?: number | null
+    sessionId?: string | null
+    visibility?: $Enums.MemeVisibility
+    status?: $Enums.MemeStatus
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    textLayers?: TextLayerUncheckedCreateNestedManyWithoutMemeInput
+    downloads?: DownloadUncheckedCreateNestedManyWithoutMemeInput
+  }
+
+  export type MemeCreateOrConnectWithoutSharesInput = {
+    where: MemeWhereUniqueInput
+    create: XOR<MemeCreateWithoutSharesInput, MemeUncheckedCreateWithoutSharesInput>
+  }
+
+  export type MemeUpsertWithoutSharesInput = {
+    update: XOR<MemeUpdateWithoutSharesInput, MemeUncheckedUpdateWithoutSharesInput>
+    create: XOR<MemeCreateWithoutSharesInput, MemeUncheckedCreateWithoutSharesInput>
+    where?: MemeWhereInput
+  }
+
+  export type MemeUpdateToOneWithWhereWithoutSharesInput = {
+    where?: MemeWhereInput
+    data: XOR<MemeUpdateWithoutSharesInput, MemeUncheckedUpdateWithoutSharesInput>
+  }
+
+  export type MemeUpdateWithoutSharesInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    imageUrl?: StringFieldUpdateOperationsInput | string
+    userId?: NullableIntFieldUpdateOperationsInput | number | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    visibility?: EnumMemeVisibilityFieldUpdateOperationsInput | $Enums.MemeVisibility
+    status?: EnumMemeStatusFieldUpdateOperationsInput | $Enums.MemeStatus
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    textLayers?: TextLayerUpdateManyWithoutMemeNestedInput
+    downloads?: DownloadUpdateManyWithoutMemeNestedInput
+  }
+
+  export type MemeUncheckedUpdateWithoutSharesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    imageUrl?: StringFieldUpdateOperationsInput | string
+    userId?: NullableIntFieldUpdateOperationsInput | number | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    visibility?: EnumMemeVisibilityFieldUpdateOperationsInput | $Enums.MemeVisibility
+    status?: EnumMemeStatusFieldUpdateOperationsInput | $Enums.MemeStatus
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    textLayers?: TextLayerUncheckedUpdateManyWithoutMemeNestedInput
+    downloads?: DownloadUncheckedUpdateManyWithoutMemeNestedInput
+  }
+
+  export type MemeShareCreateManyMemeInput = {
+    id?: number
+    platform: string
+    userId?: number | null
+    sessionId?: string | null
+    shareUrl: string
+    isPublic?: boolean
+    sharedAt?: Date | string
+    expiresAt?: Date | string | null
   }
 
   export type TextLayerCreateManyMemeInput = {
@@ -7142,6 +8783,38 @@ export namespace Prisma {
     userId?: number | null
     sessionId?: string | null
     downloadedAt?: Date | string
+  }
+
+  export type MemeShareUpdateWithoutMemeInput = {
+    platform?: StringFieldUpdateOperationsInput | string
+    userId?: NullableIntFieldUpdateOperationsInput | number | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    shareUrl?: StringFieldUpdateOperationsInput | string
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    sharedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type MemeShareUncheckedUpdateWithoutMemeInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    platform?: StringFieldUpdateOperationsInput | string
+    userId?: NullableIntFieldUpdateOperationsInput | number | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    shareUrl?: StringFieldUpdateOperationsInput | string
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    sharedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type MemeShareUncheckedUpdateManyWithoutMemeInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    platform?: StringFieldUpdateOperationsInput | string
+    userId?: NullableIntFieldUpdateOperationsInput | number | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    shareUrl?: StringFieldUpdateOperationsInput | string
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
+    sharedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type TextLayerUpdateWithoutMemeInput = {

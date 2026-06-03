@@ -157,6 +157,18 @@ exports.Prisma.DownloadScalarFieldEnum = {
   downloadedAt: 'downloadedAt'
 };
 
+exports.Prisma.MemeShareScalarFieldEnum = {
+  id: 'id',
+  memeId: 'memeId',
+  platform: 'platform',
+  userId: 'userId',
+  sessionId: 'sessionId',
+  shareUrl: 'shareUrl',
+  isPublic: 'isPublic',
+  sharedAt: 'sharedAt',
+  expiresAt: 'expiresAt'
+};
+
 exports.Prisma.TemplateScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -191,6 +203,12 @@ exports.Prisma.DownloadOrderByRelevanceFieldEnum = {
   sessionId: 'sessionId'
 };
 
+exports.Prisma.MemeShareOrderByRelevanceFieldEnum = {
+  platform: 'platform',
+  sessionId: 'sessionId',
+  shareUrl: 'shareUrl'
+};
+
 exports.Prisma.TemplateOrderByRelevanceFieldEnum = {
   name: 'name',
   imageUrl: 'imageUrl',
@@ -212,6 +230,7 @@ exports.Prisma.ModelName = {
   Meme: 'Meme',
   TextLayer: 'TextLayer',
   Download: 'Download',
+  MemeShare: 'MemeShare',
   Template: 'Template'
 };
 

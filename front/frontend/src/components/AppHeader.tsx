@@ -18,14 +18,14 @@ export function AppHeader() {
         <nav className="flex items-center gap-3 sm:gap-4">
           {session?.isAuthenticated ? (
             <>
-              {/* ✅ Afficher le nom de l'utilisateur */}
+              {/* Afficher le nom de l'utilisateur */}
               <div className="hidden items-center gap-2 rounded-full bg-blue-50 px-3 py-1 sm:flex">
                 <span className="text-xs font-medium text-blue-700">
                   {session.firstName} {session.lastName}
                 </span>
               </div>
 
-              {/* ✅ Lien vers la galerie */}
+              {/*  Lien vers la galerie */}
               <Link
                 to="/gallery"
                 className="cursor-pointer rounded-lg border border-blue-200 px-3 py-1.5 text-sm font-medium text-blue-600 transition hover:bg-blue-50"

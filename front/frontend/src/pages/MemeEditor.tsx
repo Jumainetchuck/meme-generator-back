@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useSessionStore } from '../stores/sessionStore';
 import { createMeme, addTextLayer } from '../services/memeService';
 import { uploadImage, downloadMeme } from '../services/mediaService';
+import { API_GATEWAY } from '../config/api';
 import { AppHeader } from '../components/AppHeader';
 import { MemeCanvas } from '../components/MemeCanvas';
 import { TextStyleControls } from '../components/TextStyleControls';
@@ -15,6 +16,11 @@ import {
   type TextSizeId,
 } from '../config/memeTextOptions';
 import type { TextLayer, Meme } from '../types/dtos';
+import { ShareMemeModal } from '../components/ShareMemeModal';
+
+
+
+
 
 export const MemeEditor: React.FC = () => {
   const { session, initializeSession } = useSessionStore();
@@ -37,6 +43,9 @@ export const MemeEditor: React.FC = () => {
   useEffect(() => {
     handleInit();
   }, [handleInit]);
+
+  // etat pour le modal de partage
+  const [showShareModal, setShowShareModal] = useState(false);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -68,6 +77,17 @@ export const MemeEditor: React.FC = () => {
       e.target.value = '';
     }
   };
+
+
+
+
+  
+
+
+
+
+
+
 
   const showLivePreview = Boolean(image && memeId && currentText.trim());
 
@@ -118,6 +138,52 @@ export const MemeEditor: React.FC = () => {
     } catch (error) {
       console.error('Download error:', error);
       alert('Erreur lors du téléchargement');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ✅ Fonction pour rendre PUBLIC et partager
+  const handleMakePublicAndShare = async () => {
+    if (!memeId || !session) return;
+
+    try {
+      setLoading(true);
+      console.log('📤 Mise à jour de la visibilité...');
+
+      // ✅ ÉTAPE 1: Mettre à jour la visibilité à PUBLIC en base de données
+      const updateResponse = await fetch(
+        `${API_GATEWAY}/api/memes/${memeId}/visibility`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Session-Id': session.sessionId,
+            Authorization: `Bearer ${localStorage.getItem('authToken') || ''}`,
+          },
+          body: JSON.stringify({
+            visibility: 'PUBLIC',
+            userId: session.userId || undefined,
+            sessionId: !session.userId ? session.sessionId : undefined,
+          }),
+        }
+      );
+
+      if (!updateResponse.ok) {
+        const error = await updateResponse.json();
+        throw new Error(error.message || 'Erreur lors de la mise à jour');
+      }
+
+      // ✅ ÉTAPE 2: Récupérer le mème mis à jour
+      const updatedMeme = await updateResponse.json();
+      console.log('✅ Mème rendu PUBLIC:', updatedMeme);
+
+      // ✅ ÉTAPE 3: Ouvrir le modal de partage avec le mème PUBLIC
+      setShowShareModal(true);
+    } catch (error) {
+      console.error('❌ Erreur:', error);
+      const msg = error instanceof Error ? error.message : 'Erreur inconnue';
+      alert(`❌ Impossible de rendre le mème public:\n${msg}`);
     } finally {
       setLoading(false);
     }
@@ -302,6 +368,38 @@ export const MemeEditor: React.FC = () => {
             >
               Télécharger le mème
             </button>
+
+            {/* pour la gestion du partage */}
+            <button
+              type="button"
+              onClick={handleMakePublicAndShare}
+              className="inline-flex items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-3 py-2.5 text-sm font-semibold text-blue-700 transition hover:bg-blue-100"
+              disabled={loading || !memeId}
+            >
+              📤 {loading ? 'Activation...' : 'Partager'}
+            </button>
+
+            <ShareMemeModal
+              meme={
+                memeId
+                  ? {
+                      id: memeId,
+                      title: '',
+                      imageUrl: image || '',
+                      userId: session?.userId || null,
+                      sessionId: session?.sessionId || null,
+                      visibility: 'PUBLIC',
+                      status: 'COMPLETED',
+                      expiresAt: null,
+                      textLayers: texts,
+                    }
+                  : undefined
+              }
+              isOpen={showShareModal}
+              onClose={() => setShowShareModal(false)}
+            />
+
+            
 
             {!session.userId ? (
               <Link
