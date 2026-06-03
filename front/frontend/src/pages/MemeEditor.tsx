@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useSessionStore } from '../stores/sessionStore';
 import { createMeme, addTextLayer } from '../services/memeService';
 import { uploadImage, downloadMeme } from '../services/mediaService';
+import { API_GATEWAY } from '../config/api';
 import { AppHeader } from '../components/AppHeader';
 import { MemeCanvas } from '../components/MemeCanvas';
 import { TextStyleControls } from '../components/TextStyleControls';
@@ -137,6 +138,52 @@ export const MemeEditor: React.FC = () => {
     } catch (error) {
       console.error('Download error:', error);
       alert('Erreur lors du téléchargement');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ✅ Fonction pour rendre PUBLIC et partager
+  const handleMakePublicAndShare = async () => {
+    if (!memeId || !session) return;
+
+    try {
+      setLoading(true);
+      console.log('📤 Mise à jour de la visibilité...');
+
+      // ✅ ÉTAPE 1: Mettre à jour la visibilité à PUBLIC en base de données
+      const updateResponse = await fetch(
+        `${API_GATEWAY}/api/memes/${memeId}/visibility`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Session-Id': session.sessionId,
+            Authorization: `Bearer ${localStorage.getItem('authToken') || ''}`,
+          },
+          body: JSON.stringify({
+            visibility: 'PUBLIC',
+            userId: session.userId || undefined,
+            sessionId: !session.userId ? session.sessionId : undefined,
+          }),
+        }
+      );
+
+      if (!updateResponse.ok) {
+        const error = await updateResponse.json();
+        throw new Error(error.message || 'Erreur lors de la mise à jour');
+      }
+
+      // ✅ ÉTAPE 2: Récupérer le mème mis à jour
+      const updatedMeme = await updateResponse.json();
+      console.log('✅ Mème rendu PUBLIC:', updatedMeme);
+
+      // ✅ ÉTAPE 3: Ouvrir le modal de partage avec le mème PUBLIC
+      setShowShareModal(true);
+    } catch (error) {
+      console.error('❌ Erreur:', error);
+      const msg = error instanceof Error ? error.message : 'Erreur inconnue';
+      alert(`❌ Impossible de rendre le mème public:\n${msg}`);
     } finally {
       setLoading(false);
     }
@@ -325,11 +372,11 @@ export const MemeEditor: React.FC = () => {
             {/* pour la gestion du partage */}
             <button
               type="button"
-              onClick={() => setShowShareModal(true)}
+              onClick={handleMakePublicAndShare}
               className="inline-flex items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-3 py-2.5 text-sm font-semibold text-blue-700 transition hover:bg-blue-100"
               disabled={loading || !memeId}
             >
-              📤 Partager
+              📤 {loading ? 'Activation...' : 'Partager'}
             </button>
 
             <ShareMemeModal

@@ -10,6 +10,7 @@ import {
   UploadedFile,
   BadRequestException,
   Delete,
+  Patch,
 } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import type { Response } from 'express';
@@ -269,5 +270,30 @@ async downloadMeme(
     return response.data;
   }
 
+  // route pour changer la visibilité d'un mème
+  @Patch('memes/:memeId/visibility')
+  async updateMemeVisibility(
+    @Param('memeId') memeId: string,
+    @Body() body: { visibility: string },
+    @Headers('authorization') auth: string,
+    @Headers('x-session-id') sessionId: string,
+  ) {
+    const userId = this.extractUserId(auth);
+
+    const response = await firstValueFrom(
+      this.httpService.patch(
+        `${this.memeServiceUrl}/memes/${memeId}/visibility`,
+        {
+          visibility: body.visibility,
+          userId,
+          sessionId,
+        },
+        {
+          headers: { Authorization: auth },
+        },
+      ),
+    );
+    return response.data;
+  }
 
 }

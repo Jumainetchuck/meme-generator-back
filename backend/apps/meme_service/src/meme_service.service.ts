@@ -1,5 +1,6 @@
-import { ConflictException, Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException, ForbiddenException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from './prisma/prisma.service';
+import { MemeVisibility } from './generated/prisma-client';
 import { CreateMemeDto } from './dto/create-meme.dto';
 import { UpdateMemeDto } from './dto/update-meme.dto';
 import { CreateTextLayerDto } from './dto/create-textLayer.dto';
@@ -202,6 +203,44 @@ async getMeme(memeId: number, userId?: number, sessionId?: string) {
     });
   }
 
+  // Changer la visibilité d'un mème (pour activation du partage)
+  async updateVisibility(memeId: number, visibility: MemeVisibility, userId?: number, sessionId?: string) {
+    const meme = await this.prisma.meme.findUnique({
+      where: { id: memeId },
+    });
+
+    if (!meme) {
+      throw new NotFoundException('Meme not found');
+    }
+
+    // Vérifier les permissions
+    if (meme.userId) {
+      // Mème utilisateur: seul le propriétaire peut changer
+      if (meme.userId !== userId) {
+        throw new ForbiddenException('Access denied');
+      }
+    } else {
+      // Mème guest: vérifier le sessionId
+      if (meme.sessionId !== sessionId) {
+        throw new ForbiddenException('Access denied');
+      }
+    }
+
+    // Valider la visibilité
+    const validVisibilities = ['PRIVATE', 'PUBLIC', 'TEMPORARY'];
+    if (!validVisibilities.includes(visibility)) {
+      throw new BadRequestException('Invalid visibility value');
+    }
+
+    const updated = await this.prisma.meme.update({
+      where: { id: memeId },
+      data: { visibility },
+      include: { textLayers: true },
+    });
+
+    console.log(`✅ Meme ${memeId} visibility changed to ${visibility}`);
+    return updated;
+  }
 
     // supprimer un meme
   async deleteMeme(memeId: number, userId: number) {
@@ -353,6 +392,5 @@ async getMeme(memeId: number, userId?: number, sessionId?: string) {
 
     return memes;
   }
-
 
 }

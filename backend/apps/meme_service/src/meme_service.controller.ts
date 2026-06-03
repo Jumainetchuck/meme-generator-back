@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, ParseIntPipe, Query } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Patch, Param, ParseIntPipe, Query } from '@nestjs/common';
 import { MemeServiceService } from './meme_service.service';
+import { MemeVisibility } from './generated/prisma-client';
 import { CreateMemeDto } from './dto/create-meme.dto';
 import { UpdateMemeDto } from './dto/update-meme.dto';
 import { CreateTextLayerDto } from './dto/create-textLayer.dto';
@@ -72,6 +73,16 @@ export class MemeServiceController {
     return this.memeService.updateMeme(id, data as UpdateMemeDto, userId);
   }
 
+  // Changer la visibilité d'un mème (pour activation du partage)
+  @Patch('/:id/visibility')
+  async updateVisibility(
+    @Param('id', ParseIntPipe) memeId: number,
+    @Body() body: { visibility: string; userId?: number; sessionId?: string },
+  ) {
+    const { userId, sessionId, ...data } = body;
+    return this.memeService.updateVisibility(memeId, data.visibility as MemeVisibility, userId, sessionId);
+  }
+
 
   // supprimer un meme
   @Delete('/:id')
@@ -139,6 +150,8 @@ export class MemeServiceController {
     return this.shareService.getShareStats(memeId);
   }
 
+
+  
 
 }
 
