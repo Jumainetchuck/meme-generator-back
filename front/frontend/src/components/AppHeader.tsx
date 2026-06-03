@@ -7,7 +7,7 @@ export function AppHeader() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-gray-200/80 bg-white/80 backdrop-blur-md">
-      <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4 sm:px-6">
+      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
         <Link
           to="/"
           className="text-lg font-bold tracking-tight text-gray-900 transition hover:text-blue-600"
@@ -15,12 +15,24 @@ export function AppHeader() {
           Meme<span className="text-blue-600">Gen</span>
         </Link>
 
-        <nav className="flex items-center gap-2 sm:gap-3">
+        <nav className="flex items-center gap-3 sm:gap-4">
           {session?.isAuthenticated ? (
             <>
-              <span className="hidden rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 sm:inline">
-                Connecté
-              </span>
+              {/* ✅ Afficher le nom de l'utilisateur */}
+              <div className="hidden items-center gap-2 rounded-full bg-blue-50 px-3 py-1 sm:flex">
+                <span className="text-xs font-medium text-blue-700">
+                  {session.firstName} {session.lastName}
+                </span>
+              </div>
+
+              {/* ✅ Lien vers la galerie */}
+              <Link
+                to="/gallery"
+                className="cursor-pointer rounded-lg border border-blue-200 px-3 py-1.5 text-sm font-medium text-blue-600 transition hover:bg-blue-50"
+              >
+                Galerie
+              </Link>
+
               <button
                 type="button"
                 onClick={logout}

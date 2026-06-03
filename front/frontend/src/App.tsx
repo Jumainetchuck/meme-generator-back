@@ -1,12 +1,14 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { MemeEditor } from './pages/MemeEditor';
 import { AuthLayout, LoginForm, RegisterForm } from './pages/AuthPage';
+import { Gallery } from './pages/Gallery';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<MemeEditor />} />
+        <Route path="/gallery" element={<Gallery />} />
         <Route path="/auth" element={<AuthLayout />}>
           <Route index element={<Navigate to="login" replace />} />
           <Route path="login" element={<LoginForm />} />

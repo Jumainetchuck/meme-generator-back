@@ -93,8 +93,11 @@ export function LoginForm() {
     setError('');
     setLoading(true);
     try {
+      // Utiliser loginUser, pas registerUser
       const { user, access_token } = await loginUser({ email, password });
-      setAuthenticated(user.id, access_token);
+      
+      // ✅ Passer firstName, lastName et email
+      setAuthenticated(user.id, access_token, user.firstName, user.lastName, user.email);
       navigate('/');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur de connexion');
@@ -187,7 +190,8 @@ export function RegisterForm() {
         email,
         password,
       });
-      setAuthenticated(user.id, access_token);
+      // Passer firstName, lastName et email
+      setAuthenticated(user.id, access_token, user.firstName, user.lastName, user.email);
       navigate('/');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur d’inscription');

@@ -15,15 +15,28 @@ export class MemeServiceController {
     return this.memeService.getAllMemes();
   }
 
+
+  // Ajouter cette route après getAllMemes()
+  @Get('user/:userId')
+  async getUserGallery(
+    @Param('userId', ParseIntPipe) userId: number,
+  ) {
+    console.log('📚 Getting gallery for user:', userId);
+    return this.memeService.getUserGallery(userId);
+  }
+  
+
+
   // recuperer un meme
   @Get('/:id')
   getMeme(
     @Param('id', ParseIntPipe) id: number,
     @Query('sessionId') sessionId?: string,
-    @Query('userId') userId?: number,
+    @Query('userId', new ParseIntPipe({ optional: true })) userId?: number,  
   ) {
     return this.memeService.getMeme(id, userId, sessionId);
   }
+
 
   @Post('/:id/download')
   recordDownload(
@@ -91,6 +104,8 @@ export class MemeServiceController {
     );
   }
 
+  
+
 
 
   // modifier du texte sur un meme
@@ -118,5 +133,7 @@ export class MemeServiceController {
     return this.memeService.deleteTextLayer(textId, userId);
   }
 
-
 }
+
+
+

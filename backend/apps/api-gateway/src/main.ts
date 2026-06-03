@@ -25,6 +25,6 @@ async function bootstrap() {
 
 
   await app.listen(process.env.PORT ?? 3000);
-  console.log(`Application successfully running on ${await app.getUrl()}`);
+  console.log(`API Gateway successfully running on ${await app.getUrl()}`);
 }
 bootstrap();

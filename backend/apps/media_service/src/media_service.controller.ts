@@ -37,35 +37,88 @@ export class MediaServiceController {
   @Get('download/:memeId')
   async downloadMeme(
     @Param('memeId', ParseIntPipe) memeId: number,
-    @Headers('x-session-id') sessionId: string,
-    @Headers('authorization') auth: string,
     @Res() res: Response,
+    @Headers('x-session-id') sessionId?: string,  // Après @Res()
+    @Headers('authorization') auth?: string,       // Après @Res()
   ) {
-    const userId =
-      this.extractUserIdFromAuth(
-        auth,
+    try {
+      const userId = this.extractUserIdFromAuth(auth);
+
+      const filePath = await this.mediaService.downloadMeme(
+        memeId,
+        userId,
+        sessionId
       );
 
-    const filePath =
-      await this.mediaService
-        .downloadMeme(
-          memeId,
-          userId,
-          sessionId
-        );
+      const fileName = `meme_${memeId}_${Date.now()}.jpg`;
 
-    res.download(
-      filePath,
-      (err) => {
+      res.download(filePath, fileName, (err: NodeJS.ErrnoException | null) => {
         if (err) {
-          console.error(
-            'Download error:',
-            err
-          );
+          console.error('Download error:', err);
+          if (err.code === 'ENOENT') {
+            res.status(404).json({ 
+              error: 'File not found',
+              message: 'Le fichier du mème n\'existe plus.'
+            });
+          }
+        }
+      });
+    } catch (error) {
+      console.error('Download meme error:', error);
+      
+      if (error instanceof Error) {
+        if (error.message.includes('Access denied')) {
+          return res.status(403).json({ 
+            error: 'Forbidden',
+            message: 'Vous n\'avez pas accès à ce mème.'
+          });
+        }
+        if (error.message.includes('not found')) {
+          return res.status(404).json({ 
+            error: 'Not found',
+            message: 'Le mème n\'existe pas.'
+          });
         }
       }
-    );
-}
+
+      res.status(500).json({ 
+        error: 'Download failed',
+        message: 'Erreur lors du téléchargement du mème.'
+      });
+    }
+  }
+//   @Get('download/:memeId')
+//   async downloadMeme(
+//     @Param('memeId', ParseIntPipe) memeId: number,
+//     @Headers('x-session-id') sessionId: string,
+//     @Headers('authorization') auth: string,
+//     @Res() res: Response,
+//   ) {
+//     const userId =
+//       this.extractUserIdFromAuth(
+//         auth,
+//       );
+
+//     const filePath =
+//       await this.mediaService
+//         .downloadMeme(
+//           memeId,
+//           userId,
+//           sessionId
+//         );
+
+//     res.download(
+//       filePath,
+//       (err) => {
+//         if (err) {
+//           console.error(
+//             'Download error:',
+//             err
+//           );
+//         }
+//       }
+//     );
+// }
   // async downloadMeme(
   //   @Param('memeId', ParseIntPipe) memeId: number,
   //   @Headers('x-session-id') sessionId?: string,

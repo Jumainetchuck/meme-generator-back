@@ -9,6 +9,7 @@ import {
   UseInterceptors,
   UploadedFile,
   BadRequestException,
+  Delete,
 } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import type { Response } from 'express';
@@ -16,6 +17,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import FormData from 'form-data';
 import { firstValueFrom } from 'rxjs';
 import { Multer } from 'multer';
+import { UnauthorizedException } from '@nestjs/common';
 
 @Controller('api')
 export class ApiGatewayController {
@@ -118,12 +120,13 @@ export class ApiGatewayController {
   }
 
   @Get('media/download/:memeId')
-  async downloadMeme(
-    @Param('memeId') memeId: string,
-    @Headers('x-session-id') sessionId: string,
-    @Headers('authorization') auth: string,
-    @Res() res: Response,
-  ) {
+async downloadMeme(
+  @Param('memeId') memeId: string,
+  @Headers('x-session-id') sessionId: string,
+  @Headers('authorization') auth: string,
+  @Res() res: Response,
+) {
+  try {                                          // ✅ ajouter try/catch
     const response = await firstValueFrom(
       this.httpService.get(
         `${this.mediaServiceUrl}/media/download/${memeId}`,
@@ -136,9 +139,13 @@ export class ApiGatewayController {
         },
       ),
     );
-
     response.data.pipe(res);
+  } catch (error: any) {
+    const status = error?.response?.status ?? 500;
+    const message = error?.response?.data?.message ?? 'Échec du téléchargement';
+    res.status(status).json({ message });        // ✅ renvoyer l'erreur au frontend
   }
+}
 
   /** Proxy des fichiers uploadés (aperçu image dans le frontend) */
   @Get('media/*path')
@@ -169,4 +176,45 @@ export class ApiGatewayController {
       return undefined;
     }
   }
+
+  @Get('memes/gallery')
+  async getUserGallery(
+    @Headers('authorization') auth: string,
+  ) {
+    const userId = this.extractUserId(auth);
+    
+    if (!userId) {
+      throw new UnauthorizedException('User not authenticated');
+    }
+
+    console.log('📚 Fetching gallery for userId:', userId);
+
+    const response = await firstValueFrom(
+      this.httpService.get(`${this.memeServiceUrl}/memes/user/${userId}`, {
+        headers: { Authorization: auth },
+      }),
+    );
+    
+    return response.data;
+  }
+
+  // route de suppression de meme
+  @Delete('memes/:memeId')
+async deleteMeme(
+  @Param('memeId') memeId: string,
+  @Headers('authorization') auth: string,
+) {
+  const userId = this.extractUserId(auth);
+
+  const response = await firstValueFrom(
+    this.httpService.delete(
+      `${this.memeServiceUrl}/memes/${memeId}`,
+      {
+        data: { userId },
+        headers: { Authorization: auth },
+      },
+    ),
+  );
+  return response.data;
+}
 }

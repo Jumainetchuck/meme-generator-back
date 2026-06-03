@@ -59,6 +59,7 @@ export class AuthServiceService {
 
   }
 
+  // connexion de l'utilisateur
   async login(loginDTO: LoginDTO): Promise<any>{
     const { email, password } = loginDTO;
 
@@ -84,11 +85,11 @@ export class AuthServiceService {
 
     return {
       user: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        email: true,
-        createdAt: true,
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        createdAt: user.createdAt,
       },
       access_token,
     }
