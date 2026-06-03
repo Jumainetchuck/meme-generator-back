@@ -3,6 +3,7 @@ import { MemeServiceController } from './meme_service.controller';
 import { MemeServiceService } from './meme_service.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
+import { ShareMemeService } from './share/share-meme.service';
 
 @Module({
   imports: [
@@ -13,6 +14,9 @@ import { ConfigModule } from '@nestjs/config';
         }),
   ],
   controllers: [MemeServiceController],
-  providers: [MemeServiceService],
+  providers: [
+    MemeServiceService,
+    ShareMemeService,
+  ],
 })
 export class MemeServiceModule {}

@@ -25,19 +25,6 @@ enum MemeStatus {
   DELETED
 }
 
-// model Meme {
-//   id         Int            @id @default(autoincrement())
-//   title      String         @unique @db.VarChar(255)
-//   ownerId    Int?           @map("owner_id")
-//   imageUrl   String         @map("image_url") @db.VarChar(255)
-//   visibility MemeVisibility @default(TEMPORARY)
-//   createdAt  DateTime       @default(now()) @map("created_at")
-//   updatedAt  DateTime       @updatedAt @map("updated_at")
-
-//   textLayers TextLayer[]
-
-//   @@index([ownerId])
-// }
 model Meme {
   id         Int            @id @default(autoincrement())
   title      String         @unique @db.VarChar(255)
@@ -55,6 +42,9 @@ model Meme {
   
   createdAt  DateTime       @default(now()) @map("created_at")
   updatedAt  DateTime       @updatedAt @map("updated_at")
+
+  // Ajouter cette ligne
+  shares      MemeShare[]  
 
   textLayers TextLayer[]
   downloads  Download[]
@@ -85,7 +75,7 @@ model TextLayer {
   @@index([memeId])
 }
 
-// ✅ Nouveau : Tracker les téléchargements
+// tracker les téléchargements
 model Download {
   id        Int      @id @default(autoincrement())
   memeId    Int      @map("meme_id")
@@ -100,6 +90,29 @@ model Download {
   @@index([userId])
   
 }
+
+// Tracking des partages sur réseaux sociaux
+model MemeShare {
+  id          Int      @id @default(autoincrement())
+  memeId      Int      @map("meme_id")
+  platform    String   @db.VarChar(50)  // "facebook", "twitter", "instagram", "whatsapp", "linkedin"
+  userId      Int?     @map("user_id")  // null si guest
+  sessionId   String?  @map("session_id")
+  
+  shareUrl    String   @map("share_url") @db.VarChar(500)  // URL publique générée
+  isPublic    Boolean  @default(false)   // Le mème doit être PUBLIC pour être partagé
+  
+  sharedAt    DateTime @default(now()) @map("shared_at")
+  expiresAt   DateTime? @map("expires_at")  // Lien d'expiration optionnelle
+  
+  meme Meme @relation(fields: [memeId], references: [id], onDelete: Cascade)
+  
+  @@index([memeId])
+  @@index([platform])
+  @@index([userId])
+}
+
+
 
 model Template {
   id       Int    @id @default(autoincrement())

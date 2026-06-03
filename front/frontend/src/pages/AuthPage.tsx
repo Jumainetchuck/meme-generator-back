@@ -14,7 +14,7 @@ export function AuthLayout() {
   const isLogin = location.pathname.includes('login');
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-gray-50 to-gray-100">
+    <div className="bg-linear-to-b from-slate-50 via-gray-50 to-gray-100">
       <AppHeader />
 
       <main className="mx-auto flex justify-center px-4 py-10 sm:py-14">

@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { MemeEditor } from './pages/MemeEditor';
 import { AuthLayout, LoginForm, RegisterForm } from './pages/AuthPage';
 import { Gallery } from './pages/Gallery';
+import { SharedMemePage } from './pages/ShareMemePage';
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
       <Routes>
         <Route path="/" element={<MemeEditor />} />
         <Route path="/gallery" element={<Gallery />} />
+        <Route path="/share/:token" element={<SharedMemePage />} />
         <Route path="/auth" element={<AuthLayout />}>
           <Route index element={<Navigate to="login" replace />} />
           <Route path="login" element={<LoginForm />} />

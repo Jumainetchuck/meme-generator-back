@@ -15,6 +15,11 @@ import {
   type TextSizeId,
 } from '../config/memeTextOptions';
 import type { TextLayer, Meme } from '../types/dtos';
+import { ShareMemeModal } from '../components/ShareMemeModal';
+
+
+
+
 
 export const MemeEditor: React.FC = () => {
   const { session, initializeSession } = useSessionStore();
@@ -37,6 +42,9 @@ export const MemeEditor: React.FC = () => {
   useEffect(() => {
     handleInit();
   }, [handleInit]);
+
+  // etat pour le modal de partage
+  const [showShareModal, setShowShareModal] = useState(false);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -68,6 +76,17 @@ export const MemeEditor: React.FC = () => {
       e.target.value = '';
     }
   };
+
+
+
+
+  
+
+
+
+
+
+
 
   const showLivePreview = Boolean(image && memeId && currentText.trim());
 
@@ -302,6 +321,38 @@ export const MemeEditor: React.FC = () => {
             >
               Télécharger le mème
             </button>
+
+            {/* pour la gestion du partage */}
+            <button
+              type="button"
+              onClick={() => setShowShareModal(true)}
+              className="inline-flex items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-3 py-2.5 text-sm font-semibold text-blue-700 transition hover:bg-blue-100"
+              disabled={loading || !memeId}
+            >
+              📤 Partager
+            </button>
+
+            <ShareMemeModal
+              meme={
+                memeId
+                  ? {
+                      id: memeId,
+                      title: '',
+                      imageUrl: image || '',
+                      userId: session?.userId || null,
+                      sessionId: session?.sessionId || null,
+                      visibility: 'PUBLIC',
+                      status: 'COMPLETED',
+                      expiresAt: null,
+                      textLayers: texts,
+                    }
+                  : undefined
+              }
+              isOpen={showShareModal}
+              onClose={() => setShowShareModal(false)}
+            />
+
+            
 
             {!session.userId ? (
               <Link

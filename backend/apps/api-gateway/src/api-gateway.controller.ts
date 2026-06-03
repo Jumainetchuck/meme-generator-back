@@ -198,23 +198,76 @@ async downloadMeme(
     return response.data;
   }
 
+  // ✅ Route de partage de mème - PROXY vers meme service
+  @Post('memes/:memeId/share')
+  async shareMeme(
+    @Param('memeId') memeId: string,
+    @Body() body: any,
+    @Headers('x-session-id') sessionId: string,
+    @Headers('authorization') auth: string,
+  ) {
+    const userId = this.extractUserId(auth);
+    
+    const response = await firstValueFrom(
+      this.httpService.post(
+        `${this.memeServiceUrl}/memes/${memeId}/share`,
+        body,
+        {
+          params: {
+            userId: userId || undefined,
+            sessionId: sessionId || undefined,
+          },
+          headers: { Authorization: auth },
+        },
+      ),
+    );
+    return response.data;
+  }
+
+
+
+  @Get('memes/shared/:token')
+  async getSharedMeme(@Param('token') token: string) {
+    const response = await firstValueFrom(
+      this.httpService.get(`${this.memeServiceUrl}/memes/shared/${token}`),
+    );
+    return response.data;
+  }
+
+
+  @Get('memes/:memeId/share-stats')
+  async getShareStats(
+    @Param('memeId') memeId: string,
+    @Headers('authorization') auth: string,
+  ) {
+    const response = await firstValueFrom(
+      this.httpService.get(`${this.memeServiceUrl}/memes/${memeId}/share-stats`, {
+        headers: { Authorization: auth },
+      }),
+    );
+    return response.data;
+  }
+
+
   // route de suppression de meme
   @Delete('memes/:memeId')
-async deleteMeme(
-  @Param('memeId') memeId: string,
-  @Headers('authorization') auth: string,
-) {
-  const userId = this.extractUserId(auth);
+  async deleteMeme(
+    @Param('memeId') memeId: string,
+    @Headers('authorization') auth: string,
+  ) {
+    const userId = this.extractUserId(auth);
 
-  const response = await firstValueFrom(
-    this.httpService.delete(
-      `${this.memeServiceUrl}/memes/${memeId}`,
-      {
-        data: { userId },
-        headers: { Authorization: auth },
-      },
-    ),
-  );
-  return response.data;
-}
+    const response = await firstValueFrom(
+      this.httpService.delete(
+        `${this.memeServiceUrl}/memes/${memeId}`,
+        {
+          data: { userId },
+          headers: { Authorization: auth },
+        },
+      ),
+    );
+    return response.data;
+  }
+
+
 }
